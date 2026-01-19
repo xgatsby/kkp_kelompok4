@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="6a18d4c8-3932-4f7a-ad14-3a73a431bc80">
+	<property name="ireport.zoom" value="2.357947691000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<queryString language="SQL">
+		<![CDATA[select*from aset]]>
+	</queryString>
+	<field name="id_aset" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_aset" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kondisi" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="tanggal_masuk" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<staticText>
+				<reportElement style="SubTitle" x="93" y="57" width="372" height="54" uuid="b14343c5-1da1-41c6-8cb0-9ff48b164b52"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Jl. Raya Bogor, RT.13/RW.11, Kel. Kramat Jati, Kec. Kramat jati,
+Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13540
+Telepon (021) 8091745, Faksimile (021) 8091745,
+Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
+			</staticText>
+			<image>
+				<reportElement x="475" y="29" width="61" height="71" uuid="85ad0abd-6fa6-49cf-99b1-e1bcb4e7f161"/>
+				<imageExpression><![CDATA["D:\\KERJA\\WICAK\\KKP3\\InventarisAsetSekolah\\src\\laporan\\LOGO2.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="-1" y="114" width="555" height="1" uuid="3a72b261-fbfb-4b32-aa5f-dc5ea808efb0"/>
+			</line>
+			<staticText>
+				<reportElement style="SubTitle" x="93" y="15" width="372" height="22" uuid="1f86c5ed-1c8e-40ba-b5e9-b6cab72eba9c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[PEMERINTAH PROVINSI D.K.I. JAKARTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="184" y="122" width="185" height="20" uuid="4187dfb4-6f93-4418-87e5-33ec49abab45"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Laporan Data Aset]]></text>
+			</staticText>
+			<image>
+				<reportElement x="14" y="24" width="79" height="76" uuid="9b295e51-cf0b-41c0-837a-4c0fe34c5971"/>
+				<imageExpression><![CDATA["D:\\KERJA\\WICAK\\KKP3\\InventarisAsetSekolah\\src\\laporan\\LOGO.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement style="Title" x="93" y="37" width="372" height="20" uuid="016153e1-ebe2-41b3-86ec-29fe8451e574"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[SMA NEGERI 62 JAKARTA]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1" uuid="d5a3fefb-3737-4185-be7e-e6d83ef4d692"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="19" width="138" height="15" uuid="fcf57abb-654c-410d-940f-9cf9dac9564e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ID Aset]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="138" y="19" width="138" height="15" uuid="2ed31b9d-3c03-4b67-b90b-b19fe11a521b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nama Aset]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="276" y="19" width="138" height="15" uuid="dfeb1509-7fce-4501-87ed-a1d7770db9d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kondisi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="414" y="19" width="138" height="15" uuid="6b74d8d2-a35a-4101-989c-4a335044f60b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Tanggal Masuk]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="589305c5-b8fa-4081-a837-e130c324e1f8"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="138" height="15" uuid="78d34c66-6517-4cd1-ba9e-32aca73fe3d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_aset}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="138" y="0" width="138" height="15" uuid="4fd2d835-e6c6-4236-960b-50ca6e3dbea1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_aset}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="276" y="0" width="138" height="15" uuid="a9b19098-01a5-49bc-b067-809ad9de3bd6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{kondisi}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="414" y="0" width="138" height="15" uuid="b28e8c0e-29f2-4b0a-9bba-5267f3781b71"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{tanggal_masuk}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="100" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="286b9844-6cb0-40ca-9c80-437d3ec811a1"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="416" y="74" width="102" height="20" uuid="394b5595-0c5d-4708-9703-b45c1bfb3d9e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Admin]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="416" y="29" width="102" height="20" uuid="d9e982bf-79a7-4e82-a595-82a53f279223"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Disusun Oleh]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="385" y="9" width="159" height="20" uuid="518b5899-be0b-4d0d-b696-8a43561f42f0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

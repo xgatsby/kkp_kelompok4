@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="85315b1b-5d5f-4283-ba9d-555917fb5e63">
+	<property name="ireport.zoom" value="2.357947691000002"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Title" fontName="Arial" fontSize="26" isBold="true" pdfFontName="Helvetica-Bold"/>
+	<style name="SubTitle" forecolor="#666666" fontName="Arial" fontSize="18"/>
+	<style name="Column header" forecolor="#666666" fontName="Arial" fontSize="12" isBold="true"/>
+	<style name="Detail" fontName="Arial" fontSize="12"/>
+	<queryString language="SQL">
+		<![CDATA[select*from member]]>
+	</queryString>
+	<field name="id_member" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="nama_member" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kontak" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="150" splitType="Stretch">
+			<staticText>
+				<reportElement style="Title" x="94" y="39" width="372" height="20" uuid="5a9ce612-1dc1-4d88-afc5-f5a3deb3ce03"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[SMA NEGERI 62 JAKARTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="94" y="17" width="372" height="22" uuid="400d49cf-3886-488a-94e5-82a612e6ec12"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="15"/>
+				</textElement>
+				<text><![CDATA[PEMERINTAH PROVINSI D.K.I. JAKARTA]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="SubTitle" x="94" y="59" width="372" height="54" uuid="16ee848d-9d6c-42ed-8080-754ea927dafa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="10"/>
+				</textElement>
+				<text><![CDATA[Jl. Raya Bogor, RT.13/RW.11, Kel. Kramat Jati, Kec. Kramat jati,
+Kota Jakarta Timur, Daerah Khusus Ibukota Jakarta 13540
+Telepon (021) 8091745, Faksimile (021) 8091745,
+Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
+			</staticText>
+			<image>
+				<reportElement x="15" y="26" width="79" height="76" uuid="1b6a9e85-e266-4a8d-ade4-be5ae5cef40b"/>
+				<imageExpression><![CDATA["D:\\KERJA\\WICAK\\KKP3\\InventarisAsetSekolah\\src\\laporan\\LOGO.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="476" y="31" width="61" height="71" uuid="7ce5228d-a98d-4fd8-a694-73fcb8fd98e8"/>
+				<imageExpression><![CDATA["D:\\KERJA\\WICAK\\KKP3\\InventarisAsetSekolah\\src\\laporan\\LOGO2.jpg"]]></imageExpression>
+			</image>
+			<line>
+				<reportElement x="0" y="116" width="555" height="1" uuid="508f13fa-bf56-4f1b-a31b-bca5b79d4672"/>
+			</line>
+			<staticText>
+				<reportElement x="185" y="124" width="185" height="20" uuid="a6260549-16e0-4575-bac6-ea8f577870d3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Laporan Data Member]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="36" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="35" width="555" height="1" uuid="5bb60a7f-ef39-4dad-ab7c-a83285993898"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement style="Column header" x="0" y="19" width="185" height="15" uuid="174d9359-ce1c-401b-8ef9-370f06188824"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[ID Member]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="185" y="19" width="185" height="15" uuid="318de18b-02fd-4049-869f-0db3fe41aa3d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Nama Member]]></text>
+			</staticText>
+			<staticText>
+				<reportElement style="Column header" x="370" y="19" width="185" height="15" uuid="2ba5c11b-3405-4aa8-9c66-a34c7d7ed995"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Kontak]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="15" width="555" height="1" uuid="23573ffb-7f9b-4dce-b3ec-85d19a3d3c1c"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<textField>
+				<reportElement style="Detail" x="0" y="0" width="185" height="15" uuid="77b3b4ed-28ea-4364-a080-61c7c17f3fe4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_member}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="185" y="0" width="185" height="15" uuid="203adca7-bfa1-49af-9a79-c45989247d22"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{nama_member}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="Detail" x="370" y="0" width="185" height="15" uuid="de918b12-b106-460a-9df4-d667a0671c2f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{kontak}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="100" splitType="Stretch">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="3" width="555" height="1" uuid="7af7743f-82f1-4f0b-91ba-f7cf676af442"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="418" y="75" width="102" height="20" uuid="d5afa1ad-e45f-4afc-9d8f-c4f7f6f0da26"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Admin]]></text>
+			</staticText>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement style="Column header" x="387" y="10" width="159" height="20" uuid="0da8f7a4-a572-4295-8eac-dfe3d081bcad"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="418" y="30" width="102" height="20" uuid="7e82e2ce-0216-4ac8-a6a5-fc96e9981fee"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="12"/>
+				</textElement>
+				<text><![CDATA[Disusun Oleh]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="20" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>
