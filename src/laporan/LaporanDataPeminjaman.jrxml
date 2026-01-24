@@ -66,14 +66,14 @@ Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
 			</staticText>
 			<image>
 				<reportElement x="15" y="23" width="79" height="76" uuid="66ff1473-ceec-4657-a4a7-764863809029"/>
-				<imageExpression><![CDATA["LOGO.png"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO.png")]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="113" width="555" height="1" uuid="27cc651e-96cb-42ba-a306-a3b501282842"/>
 			</line>
 			<image>
 				<reportElement x="476" y="28" width="61" height="71" uuid="4809a5ff-7a53-498d-98b7-a0d7fd1dd681"/>
-				<imageExpression><![CDATA["LOGO2.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO2.jpg")]]></imageExpression>
 			</image>
 		</band>
 	</title>

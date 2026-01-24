@@ -50,11 +50,11 @@ Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
 			</staticText>
 			<image>
 				<reportElement x="15" y="26" width="79" height="76" uuid="1b6a9e85-e266-4a8d-ade4-be5ae5cef40b"/>
-				<imageExpression><![CDATA["LOGO.png"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO.png")]]></imageExpression>
 			</image>
 			<image>
 				<reportElement x="476" y="31" width="61" height="71" uuid="7ce5228d-a98d-4fd8-a694-73fcb8fd98e8"/>
-				<imageExpression><![CDATA["LOGO2.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO2.jpg")]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="116" width="555" height="1" uuid="508f13fa-bf56-4f1b-a31b-bca5b79d4672"/>

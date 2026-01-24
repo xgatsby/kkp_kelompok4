@@ -569,15 +569,31 @@ public class member extends javax.swing.JFrame {
                 "jdbc:mysql://localhost:3306/inventaris_aset",
                 "inventaris", "inventaris123"
             );
+            
+            // Try to load .jasper file first
             InputStream report = getClass().getResourceAsStream("/laporan/LaporanDataMember.jasper");
+            
+            // If .jasper doesn't exist, compile from .jrxml
             if (report == null) {
-                JOptionPane.showMessageDialog(null, "Laporan tidak ditemukan");
-                return;
+                InputStream jrxmlStream = getClass().getResourceAsStream("/laporan/LaporanDataMember.jrxml");
+                if (jrxmlStream == null) {
+                    JOptionPane.showMessageDialog(null, "File laporan (.jrxml) tidak ditemukan");
+                    return;
+                }
+                // Compile .jrxml to .jasper in memory
+                net.sf.jasperreports.engine.JasperReport jasperReport = 
+                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
+                JasperPrint print = JasperFillManager.fillReport(jasperReport, new HashMap<>(), conn);
+                JasperViewer viewer = new JasperViewer(print, false);
+                viewer.setTitle("Laporan Data Member");
+                viewer.setVisible(true);
+            } else {
+                // Use pre-compiled .jasper file
+                JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
+                JasperViewer viewer = new JasperViewer(print, false);
+                viewer.setTitle("Laporan Data Member");
+                viewer.setVisible(true);
             }
-            JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
-            JasperViewer viewer = new JasperViewer(print, false);
-            viewer.setTitle("Laporan Data Member");
-            viewer.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Gagal mencetak laporan: " + e.getMessage());

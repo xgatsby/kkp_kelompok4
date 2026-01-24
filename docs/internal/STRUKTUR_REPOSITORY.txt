@@ -1,0 +1,157 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║     📁 STRUKTUR REPOSITORY YANG SUDAH DIRAPIKAN               ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+kkp_kelompok4/
+│
+├── 📄 README.md                    ⭐ Dokumentasi utama
+├── 📄 README_FIRST.txt             ⭐ Panduan singkat (BACA INI DULU!)
+├── 📄 LICENSE                      Lisensi project
+├── 📄 .gitignore                   Git ignore rules
+├── 📄 manifest.mf                  JAR manifest
+│
+├── 🚀 START_HERE.bat               ⭐⭐⭐ MULAI DARI SINI! (Menu interaktif)
+│
+├── 📂 docs/                        📚 DOKUMENTASI LENGKAP
+│   ├── QUICK_START.md              Setup 1 menit
+│   ├── SETUP_GUIDE.md              Panduan lengkap + troubleshooting
+│   ├── CHECKLIST_SEBELUM_PUSH.md   Checklist untuk maintainer
+│   ├── ANNOUNCEMENT_TEMPLATE.txt   Template pengumuman
+│   ├── CHANGELOG.md                Riwayat perubahan
+│   └── FOLDER_STRUCTURE.md         Struktur folder (detail)
+│
+├── 📂 scripts/                     🔧 INSTALLER & UTILITIES
+│   ├── SETUP_OTOMATIS.bat          Setup otomatis (one-click)
+│   ├── INSTALL.bat                 Installer manual
+│   ├── BUILD.bat                   Build aplikasi
+│   ├── RUN.bat                     Jalankan aplikasi
+│   ├── SETUP_DATABASE.bat          Setup database
+│   ├── TEST_CONNECTION.bat         Test koneksi database
+│   └── init_git.bat                Git initialization
+│
+├── 📂 config/                      ⚙️ FILE KONFIGURASI
+│   ├── db.properties               Konfigurasi database
+│   ├── database_setup.sql          SQL setup script
+│   └── build.xml                   Ant build configuration
+│
+├── 📂 src/                         💻 SOURCE CODE
+│   ├── koneksi/                    Koneksi database
+│   │   └── koneksi.java
+│   ├── master/                     Form master data
+│   │   ├── login.java
+│   │   ├── branda.java
+│   │   ├── aset.java
+│   │   ├── kategori.java
+│   │   ├── lokasi.java
+│   │   └── member.java
+│   ├── transaksi/                  Form transaksi
+│   │   ├── mutasi.java
+│   │   └── peminjaman.java
+│   ├── laporan/                    Template laporan JasperReports
+│   │   ├── LaporanDataAset.jrxml
+│   │   ├── LaporanDataKategori.jrxml
+│   │   ├── LaporanDataLokasi.jrxml
+│   │   ├── LaporanDataMember.jrxml
+│   │   ├── LaporanDataMutasi.jrxml
+│   │   ├── LaporanDataPeminjaman.jrxml
+│   │   ├── LOGO.png
+│   │   └── LOGO2.jpg
+│   └── icon/                       Icon & assets UI
+│       └── ... (24 icon files)
+│
+├── 📂 Database/                    🗄️ DATABASE SQL FILES
+│   └── inventaris_aset.sql         Database schema & data
+│
+├── 📂 Libraries/                   📚 JAR DEPENDENCIES (14 files)
+│   ├── mysql-connector-java-8.0.33.jar
+│   ├── jasperreports-6.0.0.jar
+│   ├── itextpdf-5.5.4.jar
+│   ├── itext-pdfa-5.5.4.jar
+│   ├── jcalendar-1.4.jar
+│   ├── commons-beanutils-1.9.4.jar
+│   ├── commons-collections-3.2.1.jar
+│   ├── commons-digester-2.1.jar
+│   ├── commons-logging-1.2.jar
+│   ├── groovy-2.4.5.jar
+│   ├── jgoodies-common-1.2.0.jar
+│   ├── jgoodies-looks-2.4.1.jar
+│   └── junit-4.6.jar
+│
+├── 📂 nbproject/                   🔨 NETBEANS PROJECT CONFIG
+│   ├── project.xml
+│   ├── project.properties
+│   ├── build-impl.xml
+│   └── genfiles.properties
+│
+├── 📂 build/                       🏗️ BUILD OUTPUT (auto-generated, di-ignore)
+└── 📂 dist/                        📦 DISTRIBUTION (auto-generated, di-ignore)
+
+════════════════════════════════════════════════════════════════
+🎯 PERUBAHAN YANG DILAKUKAN
+════════════════════════════════════════════════════════════════
+
+✅ FOLDER BARU:
+   - docs/       → Semua dokumentasi dikumpulkan di sini
+   - scripts/    → Semua script installer dikumpulkan di sini
+   - config/     → Semua file konfigurasi dikumpulkan di sini
+
+✅ FILE DIPINDAHKAN:
+   Dokumentasi → docs/
+   - QUICK_START.md
+   - SETUP_GUIDE.md
+   - CHECKLIST_SEBELUM_PUSH.md
+   - ANNOUNCEMENT_TEMPLATE.txt
+   - CHANGELOG.md
+
+   Scripts → scripts/
+   - SETUP_OTOMATIS.bat
+   - INSTALL.bat
+   - BUILD.bat
+   - RUN.bat
+   - SETUP_DATABASE.bat
+   - TEST_CONNECTION.bat
+   - init_git.bat
+
+   Config → config/
+   - db.properties
+   - database_setup.sql
+   - build.xml
+
+✅ FILE BARU:
+   - START_HERE.bat              → Menu interaktif utama
+   - README_FIRST.txt            → Panduan singkat
+   - docs/FOLDER_STRUCTURE.md    → Dokumentasi struktur folder
+   - docs/internal/STRUKTUR_REPOSITORY.txt → File ini
+
+✅ FILE TETAP DI ROOT:
+   - README.md                   → Dokumentasi utama
+   - LICENSE                     → Lisensi
+   - .gitignore                  → Git ignore
+   - manifest.mf                 → JAR manifest
+   - START_HERE.bat              → Entry point utama
+
+════════════════════════════════════════════════════════════════
+🚀 CARA MENGGUNAKAN STRUKTUR BARU
+════════════════════════════════════════════════════════════════
+
+1. UNTUK ANGGOTA TIM BARU:
+   → Double-click: START_HERE.bat
+   → Pilih: [1] Setup Otomatis
+
+2. UNTUK DOKUMENTASI:
+   → Buka folder: docs/
+   → Baca: SETUP_GUIDE.md
+
+3. UNTUK DEVELOPMENT:
+   → Edit code di: src/
+   → Build dengan: scripts/BUILD.bat
+   → Run dengan: scripts/RUN.bat
+
+4. UNTUK KONFIGURASI:
+   → Edit: config/db.properties
+   → Setup DB: scripts/SETUP_DATABASE.bat
+
+════════════════════════════════════════════════════════════════
+✅ KEUN

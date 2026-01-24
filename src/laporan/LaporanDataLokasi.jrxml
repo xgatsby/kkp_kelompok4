@@ -26,7 +26,7 @@
 		<band height="150" splitType="Stretch">
 			<image>
 				<reportElement x="15" y="26" width="79" height="76" uuid="79fc8dd3-fd31-4111-bf9d-8ffe56cc2909"/>
-				<imageExpression><![CDATA["LOGO.png"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO.png")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement style="SubTitle" x="94" y="17" width="372" height="22" uuid="e678f500-525e-4791-bfc0-c23ee528b5be"/>
@@ -37,7 +37,7 @@
 			</staticText>
 			<image>
 				<reportElement x="476" y="31" width="61" height="71" uuid="7a004312-183b-489a-8d07-21222c5e8b4d"/>
-				<imageExpression><![CDATA["LOGO2.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO2.jpg")]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="0" y="116" width="555" height="1" uuid="e81ba6d1-6cbe-4d05-bfde-32a1cbb28fdb"/>

@@ -1,0 +1,104 @@
+========================================
+📢 PENGUMUMAN PROJECT
+========================================
+
+Halo! 👋
+
+Repository project sudah ready di GitHub!
+
+🔗 Link Repository:
+https://github.com/xgatsby/kkp_kelompok4
+
+========================================
+⚡ CARA SETUP (SUPER MUDAH!)
+========================================
+
+1️⃣ INSTALL PRASYARAT (Sekali aja!)
+   - Java JDK 8+: https://adoptium.net/
+   - Laragon: https://laragon.org/download/
+   
+2️⃣ CLONE REPOSITORY
+   git clone https://github.com/xgatsby/kkp_kelompok4.git
+   cd kkp_kelompok4
+
+3️⃣ JALANKAN INSTALLER
+   Double-click: START_HERE.bat
+   Pilih: [1] Setup Otomatis
+   
+4️⃣ LOGIN
+   Username: admin
+   Password: admin123
+
+✅ SELESAI! Aplikasi siap digunakan!
+
+========================================
+📚 DOKUMENTASI LENGKAP
+========================================
+
+📖 Baca file ini di repository:
+
+1. docs/QUICK_START.md
+   → Setup 1 menit (untuk yang buru-buru)
+
+2. docs/SETUP_GUIDE.md
+   → Panduan lengkap + troubleshooting
+
+3. README.md
+   → Overview project & fitur
+
+========================================
+🆘 TROUBLESHOOTING
+========================================
+
+❌ Error "Access denied for user"?
+   → Jalankan ulang: scripts\SETUP_DATABASE.bat
+
+❌ Error "Java not found"?
+   → Install Java JDK dari link di atas
+
+❌ Error "MySQL tidak ditemukan"?
+   → Install Laragon, lalu Start All
+
+❌ Masih gagal?
+   → Baca docs/SETUP_GUIDE.md bagian Troubleshooting
+   → Atau buat issue di GitHub
+
+========================================
+🎓 TIPS DEVELOPMENT
+========================================
+
+✅ DO (Lakukan):
+   - Selalu git pull sebelum coding
+   - Test aplikasi setelah git pull
+   - Commit dengan pesan yang jelas
+   - Koordinasi sebelum edit file yang sama
+
+❌ DON'T (Jangan):
+   - Jangan commit folder build/ atau dist/
+   - Jangan hapus folder Libraries/
+   - Jangan hardcode path absolut
+
+========================================
+📁 STRUKTUR PROJECT
+========================================
+
+kkp_kelompok4/
+├── src/              → Source code
+├── Libraries/        → JAR files (JANGAN HAPUS!)
+├── Database/         → File SQL
+├── docs/             → Dokumentasi
+├── scripts/          → Installer scripts
+├── START_HERE.bat    → Menu interaktif
+└── README.md         → Dokumentasi utama
+
+========================================
+❓ BUTUH BANTUAN?
+========================================
+
+1. Cek dulu: docs/SETUP_GUIDE.md
+2. Buat issue di GitHub
+3. Lihat dokumentasi di folder docs/
+
+========================================
+
+Happy coding! 🚀

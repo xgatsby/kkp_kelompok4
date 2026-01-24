@@ -1,6 +1,5 @@
 package transaksi;
 
-import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,14 +20,38 @@ import net.sf.jasperreports.view.JasperViewer;
 
 
 public class peminjaman extends javax.swing.JFrame {
-    private Connection conn = new koneksi().connect();
+    private Connection conn;
 
     public peminjaman() {
         initComponents();
+        
+        // Initialize connection with error handling
+        try {
+            conn = new koneksi().connect();
+            if (conn == null) {
+                JOptionPane.showMessageDialog(this, 
+                    "Gagal koneksi ke database!\n\n" +
+                    "Pastikan:\n" +
+                    "1. MySQL/Laragon sudah berjalan\n" +
+                    "2. Database 'inventaris_aset' sudah dibuat\n" +
+                    "3. User 'inventaris' dengan password 'inventaris123' sudah ada\n\n" +
+                    "Aplikasi akan tetap berjalan tapi fitur database tidak akan bekerja.",
+                    "Error Koneksi Database",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Error saat koneksi database: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        
         tampilkanTanggal();
-        tampilData();
-        loadComboBoxMember();
-        loadComboBoxAset();
+        if (conn != null) {
+            tampilData();
+            loadComboBoxMember();
+            loadComboBoxAset();
+        }
     }
 
     private void tampilkanTanggal() {
@@ -82,6 +105,12 @@ public class peminjaman extends javax.swing.JFrame {
     
     
         private void loadComboBoxMember() {
+    if (conn == null) {
+        namamember.removeAllItems();
+        namamember.addItem("-- Database tidak terhubung --");
+        return;
+    }
+    
     try {
         String sql = "SELECT nama_member FROM member";
         PreparedStatement pst = conn.prepareStatement(sql);
@@ -100,6 +129,12 @@ public class peminjaman extends javax.swing.JFrame {
 }
         
         private void loadComboBoxAset() {
+    if (conn == null) {
+        idaset.removeAllItems();
+        idaset.addItem("-- Database tidak terhubung --");
+        return;
+    }
+    
     try {
         String sql = "SELECT id_aset FROM aset";
         PreparedStatement pst = conn.prepareStatement(sql);
@@ -690,15 +725,31 @@ public class peminjaman extends javax.swing.JFrame {
                 "jdbc:mysql://localhost:3306/inventaris_aset",
                 "inventaris", "inventaris123"
             );
+            
+            // Try to load .jasper file first
             InputStream report = getClass().getResourceAsStream("/laporan/LaporanDataPeminjaman.jasper");
+            
+            // If .jasper doesn't exist, compile from .jrxml
             if (report == null) {
-                JOptionPane.showMessageDialog(null, "Laporan tidak ditemukan");
-                return;
+                InputStream jrxmlStream = getClass().getResourceAsStream("/laporan/LaporanDataPeminjaman.jrxml");
+                if (jrxmlStream == null) {
+                    JOptionPane.showMessageDialog(null, "File laporan (.jrxml) tidak ditemukan");
+                    return;
+                }
+                // Compile .jrxml to .jasper in memory
+                net.sf.jasperreports.engine.JasperReport jasperReport = 
+                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
+                JasperPrint print = JasperFillManager.fillReport(jasperReport, new HashMap<>(), conn);
+                JasperViewer viewer = new JasperViewer(print, false);
+                viewer.setTitle("Laporan Data Peminjaman");
+                viewer.setVisible(true);
+            } else {
+                // Use pre-compiled .jasper file
+                JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
+                JasperViewer viewer = new JasperViewer(print, false);
+                viewer.setTitle("Laporan Data Peminjaman");
+                viewer.setVisible(true);
             }
-            JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
-            JasperViewer viewer = new JasperViewer(print, false);
-            viewer.setTitle("Laporan Data Peminjaman");
-            viewer.setVisible(true);
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "Gagal mencetak laporan: " + e.getMessage());

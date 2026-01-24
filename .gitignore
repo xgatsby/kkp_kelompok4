@@ -58,6 +58,17 @@ tmp/
 # Test folder (kosong, tidak penting)
 test/
 
+# Temporary images (tidak penting)
+*.jpg
+*.jpeg
+*.png
+!src/icon/*.png
+!src/laporan/*.png
+!src/laporan/*.jpg
+
+# Query files (temporary)
+query
+
 # ============================================
 # YANG DI-COMMIT (Penting untuk running):
 # ============================================
@@ -65,12 +76,12 @@ test/
 # ✅ Libraries/ - JAR files (WAJIB)
 # ✅ Database/ - SQL files (WAJIB)
 # ✅ nbproject/*.xml, *.properties (WAJIB untuk NetBeans)
-# ✅ README.md (Dokumentasi)
-# ✅ INSTALL.bat, RUN.bat (Installer)
-# ✅ database_setup.sql (Setup DB)
-# ✅ db.properties (Config DB)
-# ✅ build.xml, manifest.mf (Build config)
+# ✅ docs/ - Dokumentasi (WAJIB)
+# ✅ scripts/ - Installer scripts (WAJIB)
+# ✅ config/ - File konfigurasi (WAJIB)
+# ✅ README.md, README_FIRST.txt (Dokumentasi)
+# ✅ START_HERE.bat (Menu utama)
 # ✅ LICENSE
 # ✅ .gitignore
+# ✅ manifest.mf (Build config)
 # ============================================
-

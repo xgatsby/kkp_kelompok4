@@ -1,15 +1,51 @@
 # 📦 Sistem Inventaris Aset Sekolah
 
-## ⚡ Quick Start
+> **🎯 Getting Started:** Baca [README_FIRST.txt](README_FIRST.txt) atau double-click [START_HERE.bat](START_HERE.bat)
 
-### Windows:
+## ⚡ Quick Start (1 MENIT!)
+
+### 🎯 **Prasyarat:**
+- ✅ Java JDK 8+ sudah install
+- ✅ MySQL (Laragon/XAMPP) sudah install & running
+- ✅ Repository sudah clone
+
+**Cek prasyarat:** Double-click `QUICK_TEST.bat` atau `TEST_SEMUA.bat`
+
+### 🚀 Cara Tercepat (ONE-CLICK):
 ```cmd
 git clone https://github.com/xgatsby/kkp_kelompok4.git
 cd kkp_kelompok4
-INSTALL.bat
+
+# Double-click salah satu:
+START_HERE.bat                  # Menu interaktif
+scripts\SETUP_OTOMATIS.bat      # Setup otomatis langsung
 ```
 
-**Selesai!** Login: `` / `` 🎉
+### 📦 Cara Manual:
+```cmd
+git clone https://github.com/xgatsby/kkp_kelompok4.git
+cd kkp_kelompok4
+scripts\INSTALL.bat
+```
+
+**Login:** `admin` / `admin123` 🎉
+
+---
+
+## 📚 Dokumentasi
+
+| File | Deskripsi |
+|------|-----------|
+| **README_FIRST.txt** | 👈 **BACA INI DULU!** Panduan singkat |
+| **START_HERE.bat** | 🚀 Menu interaktif untuk setup |
+| **QUICK_TEST.bat** | 🧪 Test prasyarat (5 detik) |
+| **TEST_SEMUA.bat** | 🔍 Test lengkap semua prasyarat |
+| **docs/QUICK_START.md** | ⚡ Setup 1 menit |
+| **docs/SETUP_GUIDE.md** | 📖 Panduan lengkap + troubleshooting |
+| **docs/FOLDER_STRUCTURE.md** | 📁 Struktur folder repository |
+| **scripts/SETUP_OTOMATIS.bat** | 🤖 Setup otomatis (one-click) |
+| **scripts/INSTALL.bat** | 📦 Installer manual |
+| **scripts/RUN.bat** | ▶️ Quick launcher |
 
 ---
 
@@ -23,67 +59,97 @@ INSTALL.bat
 
 ## 🛠️ Yang Dibutuhkan
 
-1. **Java JDK 8+** - https://www.oracle.com/java/technologies/downloads/
-2. **MySQL 5.7/8.0** - https://dev.mysql.com/downloads/mysql/
-3. **NetBeans IDE** (opsional) - https://netbeans.apache.org/download/
+### **Wajib:**
+1. **Java JDK 8+** - https://adoptium.net/
+2. **MySQL 5.7/8.0** - https://laragon.org/download/ (Recommended)
 
-## 📖 Cara Pakai
+### **Opsional:**
+3. **NetBeans IDE** - https://netbeans.apache.org/download/ (untuk development)
 
-### Opsi 1: Pakai Installer (Recommended)
-
-**Windows:**
-1. Double-click `INSTALL.bat`
-2. Ikuti instruksi
-3. Pilih cara run (NetBeans atau JAR)
-
-### Opsi 3: Jalankan JAR (Kalau Udah Build)
-
+### **Cek Prasyarat:**
 ```cmd
-RUN.bat
+# Quick test (5 detik)
+QUICK_TEST.bat
+
+# Full test (lengkap)
+TEST_SEMUA.bat
 ```
 
-## 📁 Struktur Project
+## � Struktur Project
 
 ```
 kkp_kelompok4/
-├── Database/              # File SQL database
-├── Libraries/             # Library JAR (MySQL, JasperReports, dll)
-├── src/                   # Source code
-├── INSTALL.bat            # Installer otomatis
-├── RUN.bat                # Quick launcher
-└── README.md
+├── 📄 README.md                # Dokumentasi utama
+├── 📄 README_FIRST.txt         # Panduan singkat
+├── 🚀 START_HERE.bat           # Menu interaktif
+├── 🧪 QUICK_TEST.bat           # Quick test (5 detik)
+├── 🧪 TEST_SEMUA.bat           # Full test
+│
+├── 📂 docs/                    # Dokumentasi lengkap
+│   ├── QUICK_START.md
+│   ├── SETUP_GUIDE.md
+│   └── internal/               # Dokumentasi internal
+│
+├── 📂 scripts/                 # Installer & utilities
+├── 📂 config/                  # File konfigurasi
+├── 📂 src/                     # Source code
+├── 📂 Database/                # SQL files
+├── 📂 Libraries/               # JAR dependencies
+└── 📂 nbproject/               # NetBeans config
 ```
+
+Lihat struktur lengkap: [STRUKTUR_FOLDER.txt](STRUKTUR_FOLDER.txt) atau [docs/FOLDER_STRUCTURE.md](docs/FOLDER_STRUCTURE.md)
+
+---
 
 ## 🔧 Konfigurasi Database
 
-Kalau mau ganti user/password database, edit `src/koneksi/koneksi.java`:
+Edit file: `src/koneksi/koneksi.java`
 
-## � Troubleshooting
+```java
+public static final String DB_URL = "jdbc:mysql://localhost:3306/inventaris_aset";
+public static final String DB_USER = "inventaris";
+public static final String DB_PASS = "inventaris123";
+```
+
+**Setelah edit, WAJIB rebuild:**
+- NetBeans: Clean and Build (Shift + F11)
+- Manual: `scripts\BUILD.bat`
+
+---
+
+## 🆘 Troubleshooting
 
 ### Error: "Access denied for user"
-Pastikan username dan password di `koneksi.java` sesuai dengan MySQL kamu.
+Jalankan: `scripts\SETUP_DATABASE.bat`
 
 ### Error: "Cannot connect to database"
-- Cek MySQL service udah jalan belum
-- Pastikan database `inventaris_aset` udah dibuat
-- Cek port MySQL (default: 3306)
+- Cek MySQL service sudah jalan
+- Pastikan database `inventaris_aset` sudah dibuat
+- Test koneksi: `scripts\TEST_CONNECTION.bat`
+
+### Error: "Java not found"
+- Install Java JDK: https://adoptium.net/
+- Restart CMD
+- Jalankan ulang installer
 
 ### Error saat Build
-- Pastikan JDK udah terinstall
+- Pastikan JDK sudah terinstall
 - Pastikan semua library di folder `Libraries/` ada
 - Coba Clean and Build ulang
 
-### INSTALL.bat Tidak Jalan
-- Klik kanan → Run as Administrator
-- Atau jalankan manual step-by-step
+**Troubleshooting lengkap:** [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
 
-## � Catatan
+---
 
-- Semua library udah include di folder `Libraries/`
-- JAR file ada di `dist/InventarisAsetSekolah.jar` setelah build
+## 📞 Butuh Bantuan?
+
+1. Cek: [docs/SETUP_GUIDE.md](docs/SETUP_GUIDE.md)
+2. Buat issue: https://github.com/xgatsby/kkp_kelompok4/issues
+3. Lihat dokumentasi lengkap di folder `docs/`
 
 ---
 
 **Repository:** https://github.com/xgatsby/kkp_kelompok4
 
-**Butuh bantuan?** Buat issue di https://github.com/xgatsby/kkp_kelompok4/issues
+**Happy Coding! 🚀**

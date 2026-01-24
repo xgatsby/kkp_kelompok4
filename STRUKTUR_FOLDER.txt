@@ -1,0 +1,222 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║     📁 STRUKTUR FOLDER REPOSITORY                             ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Repository ini disusun dengan struktur yang rapi dan terorganisir.
+
+════════════════════════════════════════════════════════════════
+📂 STRUKTUR LENGKAP
+════════════════════════════════════════════════════════════════
+
+kkp_kelompok4/
+│
+├── 📂 docs/                        📚 DOKUMENTASI
+│   ├── QUICK_START.md              Setup 1 menit
+│   ├── SETUP_GUIDE.md              Panduan lengkap + troubleshooting
+│   ├── FOLDER_STRUCTURE.md         Dokumentasi struktur folder detail
+│   ├── ANNOUNCEMENT_TEMPLATE.txt   Template pengumuman
+│   ├── CHANGELOG.md                Catatan perubahan
+│   │
+│   └── 📂 internal/                📋 DOKUMENTASI INTERNAL
+│       ├── README.md               Penjelasan folder internal
+│       ├── STATUS_REPOSITORY.md    Status lengkap repository
+│       ├── RINGKASAN_FINAL.txt     Ringkasan final untuk commit
+│       ├── APA_YANG_SUDAH_DILAKUKAN.txt  Penjelasan lengkap
+│       ├── STRUKTUR_REPOSITORY.txt Detail struktur (versi lama)
+│       └── CARA_COMMIT_PERUBAHAN.txt  Panduan commit & push
+│
+├── 📂 scripts/                     🔧 INSTALLER & UTILITIES
+│   ├── SETUP_OTOMATIS.bat          One-click setup (auto-detect)
+│   ├── INSTALL.bat                 Installer manual
+│   ├── BUILD.bat                   Build aplikasi
+│   ├── RUN.bat                     Quick launcher
+│   ├── SETUP_DATABASE.bat          Setup database otomatis
+│   ├── TEST_CONNECTION.bat         Test koneksi database
+│   └── init_git.bat                Init git repository
+│
+├── 📂 config/                      ⚙️ KONFIGURASI
+│   ├── db.properties               Konfigurasi database
+│   ├── database_setup.sql          SQL setup database
+│   └── build.xml                   Build configuration
+│
+├── 📂 src/                         💻 SOURCE CODE
+│   ├── koneksi/                    Koneksi database
+│   ├── master/                     Form master data
+│   ├── transaksi/                  Form transaksi
+│   ├── laporan/                    Template laporan
+│   └── icon/                       Icon aplikasi
+│
+├── 📂 Database/                    🗄️ SQL FILES
+│   └── inventaris_aset.sql         Database schema & data
+│
+├── 📂 Libraries/                   📚 JAR DEPENDENCIES
+│   ├── mysql-connector-java-8.0.33.jar
+│   ├── jasperreports-6.0.0.jar
+│   └── ... (library lainnya)
+│
+├── 📂 nbproject/                   🔨 NETBEANS CONFIG
+│   ├── project.properties
+│   ├── project.xml
+│   └── private/
+│
+├── 📂 build/                       🏗️ BUILD OUTPUT (ignored)
+├── 📂 dist/                        📦 DISTRIBUTION (ignored)
+├── 📂 test/                        🧪 TEST FILES (kosong)
+│
+├── 🚀 START_HERE.bat               MENU INTERAKTIF UTAMA
+├── 📄 README.md                    DOKUMENTASI UTAMA
+├── 📄 README_FIRST.txt             PANDUAN SINGKAT
+├── 🧪 QUICK_TEST.bat               QUICK TEST PRASYARAT (5 detik)
+├── 🧪 TEST_SEMUA.bat               FULL TEST PRASYARAT
+├── ✅ FINAL_CHECK.bat              FINAL CHECK SEBELUM PUSH
+├── 📋 JAWABAN_PERTANYAAN.md        FAQ ONE-CLICK SETUP
+├── 📋 STRUKTUR_FOLDER.txt          FILE INI (penjelasan struktur)
+│
+├── 📄 .gitignore                   Git ignore rules
+├── 📄 LICENSE                      License file
+└── 📄 manifest.mf                  JAR manifest
+
+════════════════════════════════════════════════════════════════
+📖 PENJELASAN FOLDER
+════════════════════════════════════════════════════════════════
+
+1. 📂 docs/
+   Semua dokumentasi untuk user dan developer.
+   - User documentation: QUICK_START.md, SETUP_GUIDE.md
+   - Internal documentation: docs/internal/ (untuk maintainer)
+
+2. 📂 scripts/
+   Semua script installer dan utilities.
+   - Setup otomatis: SETUP_OTOMATIS.bat
+   - Manual setup: INSTALL.bat, BUILD.bat, RUN.bat
+   - Database: SETUP_DATABASE.bat, TEST_CONNECTION.bat
+
+3. 📂 config/
+   File konfigurasi aplikasi.
+   - Database config: db.properties
+   - Build config: build.xml
+
+4. 📂 src/
+   Source code aplikasi (Java).
+   - JANGAN EDIT sembarangan!
+   - Gunakan NetBeans untuk development
+
+5. 📂 Database/
+   File SQL untuk setup database.
+   - inventaris_aset.sql: Schema & data
+
+6. 📂 Libraries/
+   JAR dependencies yang dibutuhkan aplikasi.
+   - JANGAN HAPUS folder ini!
+   - Semua JAR di-commit ke repository
+
+════════════════════════════════════════════════════════════════
+📄 FILE PENTING DI ROOT
+════════════════════════════════════════════════════════════════
+
+1. START_HERE.bat
+   → Menu interaktif utama untuk setup & run
+   → MULAI DARI SINI!
+
+2. README.md
+   → Dokumentasi utama repository
+   → Baca ini untuk overview
+
+3. README_FIRST.txt
+   → Panduan singkat untuk pemula
+   → Quick start 1 menit
+
+4. QUICK_TEST.bat
+   → Quick test prasyarat (5 detik)
+   → Cek Java, MySQL, Files
+
+5. TEST_SEMUA.bat
+   → Full test prasyarat lengkap
+   → Detail check semua requirement
+
+6. FINAL_CHECK.bat
+   → Final check sebelum commit & push
+   → Untuk maintainer
+
+7. JAWABAN_PERTANYAAN.md
+   → FAQ tentang one-click setup
+   → Jawaban pertanyaan umum
+
+8. STRUKTUR_FOLDER.txt
+   → File ini (penjelasan struktur)
+
+════════════════════════════════════════════════════════════════
+🎯 UNTUK USER BIASA
+════════════════════════════════════════════════════════════════
+
+Jika Anda hanya ingin setup dan menjalankan aplikasi:
+
+1. Baca: README_FIRST.txt
+2. Jalankan: START_HERE.bat
+3. Pilih: [1] Setup Otomatis
+4. Login: admin / admin123
+5. ✅ SELESAI!
+
+Jika ada masalah:
+- Baca: docs/SETUP_GUIDE.md
+- Baca: JAWABAN_PERTANYAAN.md
+
+════════════════════════════════════════════════════════════════
+🔧 UNTUK DEVELOPER
+════════════════════════════════════════════════════════════════
+
+Jika Anda ingin development:
+
+1. Setup aplikasi (lihat di atas)
+2. Buka NetBeans
+3. File → Open Project
+4. Pilih folder: kkp_kelompok4
+5. Edit source code di folder: src/
+6. Clean and Build (Shift + F11)
+7. Run (F6)
+
+Dokumentasi lengkap:
+- docs/SETUP_GUIDE.md
+- docs/FOLDER_STRUCTURE.md
+
+════════════════════════════════════════════════════════════════
+📋 UNTUK MAINTAINER
+════════════════════════════════════════════════════════════════
+
+Jika Anda maintain repository ini:
+
+1. Baca: docs/internal/README.md
+2. Baca: docs/internal/STATUS_REPOSITORY.md
+3. Baca: docs/internal/APA_YANG_SUDAH_DILAKUKAN.txt
+
+Sebelum commit & push:
+1. Jalankan: FINAL_CHECK.bat
+2. Baca: docs/internal/CARA_COMMIT_PERUBAHAN.txt
+3. Commit & push
+
+════════════════════════════════════════════════════════════════
+✅ ATURAN PENTING
+════════════════════════════════════════════════════════════════
+
+DO (Lakukan):
+✅ Commit source code (src/)
+✅ Commit libraries (Libraries/)
+✅ Commit database (Database/)
+✅ Commit dokumentasi (docs/)
+✅ Commit scripts (scripts/)
+✅ Commit config (config/)
+
+DON'T (Jangan):
+❌ Jangan commit folder build/
+❌ Jangan commit folder dist/
+❌ Jangan commit file .class
+❌ Jangan hapus folder Libraries/
+❌ Jangan hardcode path absolut
+
+════════════════════════════════════════════════════════════════
+
+Happy Coding! 🚀
+
+════════════════════════════════════════════════════════════════

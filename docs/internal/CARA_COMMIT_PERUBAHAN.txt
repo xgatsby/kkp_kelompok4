@@ -1,0 +1,142 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║     📤 CARA COMMIT & PUSH PERUBAHAN KE GITHUB                 ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+Repository sudah dirapikan! Sekarang commit & push ke GitHub.
+
+════════════════════════════════════════════════════════════════
+🔍 STEP 1: CEK PERUBAHAN
+════════════════════════════════════════════════════════════════
+
+git status
+
+Anda akan melihat:
+✅ File baru (new file):
+   - docs/FOLDER_STRUCTURE.md
+   - docs/QUICK_START.md
+   - docs/SETUP_GUIDE.md
+   - docs/CHECKLIST_SEBELUM_PUSH.md
+   - docs/ANNOUNCEMENT_TEMPLATE.txt
+   - docs/CHANGELOG.md
+   - scripts/SETUP_OTOMATIS.bat
+   - scripts/INSTALL.bat
+   - scripts/BUILD.bat
+   - scripts/RUN.bat
+   - scripts/SETUP_DATABASE.bat
+   - scripts/TEST_CONNECTION.bat
+   - scripts/init_git.bat
+   - config/db.properties
+   - config/database_setup.sql
+   - config/build.xml
+   - START_HERE.bat
+   - README_FIRST.txt
+   - docs/internal/STRUKTUR_REPOSITORY.txt
+   - docs/internal/CARA_COMMIT_PERUBAHAN.txt
+
+✅ File diubah (modified):
+   - README.md
+   - .gitignore
+
+❌ File dihapus (deleted):
+   - QUICK_START.md (pindah ke docs/)
+   - SETUP_UNTUK_TIM.md (rename ke SETUP_GUIDE.md)
+   - dll...
+
+════════════════════════════════════════════════════════════════
+➕ STEP 2: ADD SEMUA PERUBAHAN
+════════════════════════════════════════════════════════════════
+
+git add .
+
+Ini akan:
+- Add semua file baru
+- Add semua file yang diubah
+- Add semua file yang dihapus (karena dipindah)
+
+════════════════════════════════════════════════════════════════
+💬 STEP 3: COMMIT DENGAN PESAN YANG JELAS
+════════════════════════════════════════════════════════════════
+
+git commit -m "Reorganisasi struktur repository dan update dokumentasi
+
+- Buat folder docs/ untuk semua dokumentasi
+- Buat folder scripts/ untuk semua installer
+- Buat folder config/ untuk semua konfigurasi
+- Tambah START_HERE.bat sebagai menu interaktif utama
+- Tambah README_FIRST.txt untuk panduan singkat
+- Tambah SETUP_OTOMATIS.bat untuk one-click setup
+- Tambah TEST_SEMUA.bat dan QUICK_TEST.bat untuk cek prasyarat
+- Rename SETUP_UNTUK_TIM.md → SETUP_GUIDE.md (kata-kata lebih umum)
+- Rename PESAN_UNTUK_TIM.txt → ANNOUNCEMENT_TEMPLATE.txt
+- Update README.md dengan struktur baru
+- Update .gitignore untuk struktur baru
+- Tambah dokumentasi lengkap di docs/FOLDER_STRUCTURE.md
+- Tambah JAWABAN_PERTANYAAN.md untuk FAQ one-click setup
+
+Struktur baru lebih rapi, terorganisir, dan mudah dipahami!"
+
+════════════════════════════════════════════════════════════════
+📤 STEP 4: PUSH KE GITHUB
+════════════════════════════════════════════════════════════════
+
+git push origin main
+
+Atau jika branch Anda master:
+
+git push origin master
+
+════════════════════════════════════════════════════════════════
+✅ STEP 5: VERIFIKASI DI GITHUB
+════════════════════════════════════════════════════════════════
+
+1. Buka: https://github.com/xgatsby/kkp_kelompok4
+2. Cek struktur folder sudah benar
+3. Cek README.md tampil dengan baik
+4. Cek semua file ada
+
+════════════════════════════════════════════════════════════════
+📢 STEP 6: KIRIM PENGUMUMAN (OPSIONAL)
+════════════════════════════════════════════════════════════════
+
+Jika ingin mengumumkan update, copy pesan dari:
+docs/ANNOUNCEMENT_TEMPLATE.txt
+
+Atau buat pengumuman sendiri dengan info:
+- Link repository
+- Cara setup
+- Login credentials
+- Link dokumentasi
+
+════════════════════════════════════════════════════════════════
+🎓 TIPS DEVELOPMENT
+════════════════════════════════════════════════════════════════
+
+Jika ada yang sudah clone sebelumnya:
+
+1. git pull origin main
+2. Hapus folder lama yang sudah dipindah (opsional)
+3. Test aplikasi: START_HERE.bat
+
+════════════════════════════════════════════════════════════════
+🆘 TROUBLESHOOTING
+════════════════════════════════════════════════════════════════
+
+❌ Error: "Your local changes would be overwritten"
+   → git stash
+   → git pull
+   → git stash pop
+
+❌ Error: "Permission denied"
+   → Pastikan Anda punya akses write ke repository
+   → Atau fork dulu, lalu push ke fork Anda
+
+❌ Conflict saat push
+   → git pull --rebase
+   → Resolve conflict
+   → git push
+
+════════════════════════════════════════════════════════════════
+
+Selamat! Repository Anda sekarang rapi dan profesional! 🎉

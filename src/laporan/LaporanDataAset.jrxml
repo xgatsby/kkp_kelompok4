@@ -39,7 +39,7 @@ Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
 			</staticText>
 			<image>
 				<reportElement x="475" y="29" width="61" height="71" uuid="85ad0abd-6fa6-49cf-99b1-e1bcb4e7f161"/>
-				<imageExpression><![CDATA["LOGO2.jpg"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO2.jpg")]]></imageExpression>
 			</image>
 			<line>
 				<reportElement x="-1" y="114" width="555" height="1" uuid="3a72b261-fbfb-4b32-aa5f-dc5ea808efb0"/>
@@ -60,7 +60,7 @@ Website: https://sman62jkt.sch.id Email: msman62enamdua@gmail.com]]></text>
 			</staticText>
 			<image>
 				<reportElement x="14" y="24" width="79" height="76" uuid="9b295e51-cf0b-41c0-837a-4c0fe34c5971"/>
-				<imageExpression><![CDATA["LOGO.png"]]></imageExpression>
+				<imageExpression><![CDATA[this.getClass().getClassLoader().getResource("laporan/LOGO.png")]]></imageExpression>
 			</image>
 			<staticText>
 				<reportElement style="Title" x="93" y="37" width="372" height="20" uuid="016153e1-ebe2-41b3-86ec-29fe8451e574"/>
