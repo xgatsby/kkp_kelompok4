@@ -636,7 +636,7 @@ public class peminjaman extends javax.swing.JFrame {
 
                 Connection conn = DriverManager.getConnection(url, user, pass);
 
-                String sql = "DELETE FROM aset WHERE id_peminjaman = ?";
+                String sql = "DELETE FROM peminjaman WHERE id_peminjaman = ?";
                 PreparedStatement pst = conn.prepareStatement(sql);
                 pst.setString(1, id);
 
