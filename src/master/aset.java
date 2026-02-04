@@ -228,7 +228,7 @@ public class aset extends javax.swing.JFrame {
         jLabel12.setText("Tanggal");
 
         laporan.setBackground(new java.awt.Color(255, 255, 255));
-        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/LAPORAN.png"))); // NOI18N
+        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LAPORAN.png"))); // NOI18N
         laporan.setBorderPainted(false);
         laporan.setContentAreaFilled(false);
         laporan.setFocusPainted(false);

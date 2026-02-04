@@ -5,6 +5,11 @@
  */
 package master;
 
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Font;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -14,6 +19,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -31,6 +38,146 @@ public class member extends javax.swing.JFrame {
         tampilkanTanggal();
         tampilData();
         
+        // Auto-generate ID pertama kali
+        String nextID = generateNextID();
+        idmember.setText(nextID);
+        
+        // Set tooltip untuk membantu user
+        idmember.setToolTipText("Format: MBR001, MBR002, dst. (Auto-generated)");
+        namamember.setToolTipText("Nama lengkap member (2-100 karakter, hanya huruf)");
+        kontak.setToolTipText("Nomor telepon (8-15 digit). Contoh: 081234567890");
+        
+        // Setup Enter key listener untuk search field
+        setupSearchEnterKey();
+        
+        // Setup table highlighting
+        setupTableHighlight();
+        
+        // Focus ke nama member (ID sudah auto-fill)
+        namamember.requestFocus();
+    }
+    
+    /**
+     * Setup Enter key untuk trigger search
+     */
+    private void setupSearchEnterKey() {
+        cariteks.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    // Trigger search button click
+                    cari.doClick();
+                }
+            }
+        });
+        
+        // Tambahkan tooltip
+        cariteks.setToolTipText("Ketik kata kunci dan tekan Enter untuk mencari");
+    }
+    
+    /**
+     * Setup table untuk highlight hasil pencarian
+     */
+    private void setupTableHighlight() {
+        // Set default renderer untuk semua kolom
+        tabelmember.setDefaultRenderer(Object.class, new HighlightTableCellRenderer());
+        
+        // Set row height untuk readability
+        tabelmember.setRowHeight(25);
+        
+        // Set font
+        tabelmember.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        tabelmember.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 12));
+    }
+    
+    /**
+     * Custom cell renderer untuk highlight hasil pencarian
+     */
+    private class HighlightTableCellRenderer extends DefaultTableCellRenderer {
+        private String searchKeyword = "";
+        private Color highlightColor = new Color(173, 216, 230); // Light blue (biru muda)
+        private Color matchTextColor = new Color(0, 51, 102); // Dark blue
+        private java.util.Set<Integer> highlightedRows = new java.util.HashSet<>();
+        
+        public void setSearchKeyword(String keyword) {
+            this.searchKeyword = keyword.toLowerCase();
+            updateHighlightedRows();
+        }
+        
+        private void updateHighlightedRows() {
+            highlightedRows.clear();
+            
+            if (searchKeyword.isEmpty()) {
+                return;
+            }
+            
+            // Cari semua baris yang mengandung keyword di salah satu kolom
+            DefaultTableModel model = (DefaultTableModel) tabelmember.getModel();
+            for (int row = 0; row < model.getRowCount(); row++) {
+                boolean found = false;
+                
+                // Cek semua kolom (ID, Nama, Kontak)
+                for (int col = 0; col < model.getColumnCount(); col++) {
+                    Object value = model.getValueAt(row, col);
+                    if (value != null) {
+                        String cellValue = value.toString().toLowerCase();
+                        if (cellValue.contains(searchKeyword)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                
+                if (found) {
+                    highlightedRows.add(row);
+                }
+            }
+        }
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value,
+                boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            // Jika baris ini ada di highlightedRows, highlight SEMUA CELL di baris ini
+            if (highlightedRows.contains(row)) {
+                if (!isSelected) {
+                    c.setBackground(highlightColor);
+                    c.setForeground(matchTextColor);
+                    setFont(getFont().deriveFont(Font.BOLD));
+                } else {
+                    // Jika row selected, gunakan warna selection tapi bold
+                    setFont(getFont().deriveFont(Font.BOLD));
+                }
+            } else {
+                if (!isSelected) {
+                    c.setBackground(Color.WHITE);
+                    c.setForeground(Color.BLACK);
+                    setFont(getFont().deriveFont(Font.PLAIN));
+                }
+            }
+            
+            return c;
+        }
+    }
+    
+    /**
+     * Apply highlight ke tabel berdasarkan keyword
+     */
+    private void applyTableHighlight(String keyword) {
+        HighlightTableCellRenderer renderer = (HighlightTableCellRenderer) tabelmember.getDefaultRenderer(Object.class);
+        renderer.setSearchKeyword(keyword);
+        tabelmember.repaint();
+    }
+    
+    /**
+     * Clear highlight dari tabel
+     */
+    private void clearTableHighlight() {
+        HighlightTableCellRenderer renderer = (HighlightTableCellRenderer) tabelmember.getDefaultRenderer(Object.class);
+        renderer.setSearchKeyword("");
+        tabelmember.repaint();
     }
 
     private void tampilkanTanggal() {
@@ -76,6 +223,386 @@ public class member extends javax.swing.JFrame {
         JOptionPane.showMessageDialog(this, "Gagal load data: " + e.getMessage());
     }
 }
+    
+    // ========== PROFESSIONAL HELPER METHODS ==========
+    
+    /**
+     * Auto-generate ID Member berikutnya (MBR001, MBR002, dst)
+     */
+    private String generateNextID() {
+        String nextID = "MBR001"; // Default ID pertama
+        try {
+            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
+            String user = "inventaris";
+            String pass = "inventaris123";
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            
+            String sql = "SELECT id_member FROM member ORDER BY id_member DESC LIMIT 1";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            if (rs.next()) {
+                String lastID = rs.getString("id_member");
+                // Extract angka dari ID (contoh: MBR001 -> 001)
+                String numPart = lastID.replaceAll("[^0-9]", "");
+                if (!numPart.isEmpty()) {
+                    int num = Integer.parseInt(numPart) + 1;
+                    nextID = String.format("MBR%03d", num); // Format: MBR001, MBR002, dst
+                }
+            }
+            
+            conn.close();
+        } catch (Exception e) {
+            System.out.println("Error generating ID: " + e.getMessage());
+        }
+        return nextID;
+    }
+    
+    /**
+     * Cek apakah ID sudah ada di database
+     */
+    private boolean isIDExists(String id) {
+        try {
+            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
+            String user = "inventaris";
+            String pass = "inventaris123";
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            
+            String sql = "SELECT COUNT(*) FROM member WHERE id_member = ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            pst.setString(1, id);
+            ResultSet rs = pst.executeQuery();
+            
+            if (rs.next()) {
+                int count = rs.getInt(1);
+                conn.close();
+                return count > 0;
+            }
+            
+            conn.close();
+        } catch (Exception e) {
+            System.out.println("Error checking ID: " + e.getMessage());
+        }
+        return false;
+    }
+    
+    /**
+     * Validasi format nama (hanya huruf, spasi, dan tanda baca umum)
+     */
+    private boolean isValidName(String name) {
+        // Nama harus mengandung minimal 1 huruf dan hanya boleh huruf, spasi, titik, koma, apostrof
+        return name.matches("^[a-zA-Z\\s.',-]+$") && name.trim().length() >= 2;
+    }
+    
+    /**
+     * Validasi format kontak (hanya angka, +, -, spasi, kurung)
+     */
+    private boolean isValidContact(String contact) {
+        // Format: angka, +, -, spasi, kurung
+        // Contoh valid: 081234567890, +62 812-3456-7890, (021) 1234567
+        String cleaned = contact.replaceAll("[\\s\\-\\(\\)\\+]", "");
+        return cleaned.matches("^[0-9]{8,15}$"); // 8-15 digit angka
+    }
+    
+    /**
+     * Format kontak ke format standar Indonesia
+     */
+    private String formatContact(String contact) {
+        // Hapus semua karakter non-digit
+        String cleaned = contact.replaceAll("[^0-9]", "");
+        
+        // Jika dimulai dengan 0, ganti dengan +62
+        if (cleaned.startsWith("0")) {
+            cleaned = "62" + cleaned.substring(1);
+        }
+        
+        // Jika belum ada kode negara, tambahkan +62
+        if (!cleaned.startsWith("62")) {
+            cleaned = "62" + cleaned;
+        }
+        
+        return "+" + cleaned;
+    }
+    
+    /**
+     * Bersihkan input dari whitespace berlebih
+     */
+    private String cleanInput(String input) {
+        if (input == null) return "";
+        // Trim dan replace multiple spaces dengan single space
+        return input.trim().replaceAll("\\s+", " ");
+    }
+    
+    /**
+     * Validasi lengkap sebelum simpan
+     */
+    private String validateInput(String id, String nama, String kontak) {
+        // Bersihkan input
+        id = cleanInput(id).toUpperCase();
+        nama = cleanInput(nama);
+        kontak = cleanInput(kontak);
+        
+        // Cek field kosong
+        if (id.isEmpty() || nama.isEmpty() || kontak.isEmpty()) {
+            return "Semua field harus diisi!";
+        }
+        
+        // Validasi panjang ID
+        if (id.length() > 20) {
+            return "ID Member terlalu panjang! Maksimal 20 karakter.\nFormat yang disarankan: MBR001";
+        }
+        
+        // Validasi format ID (harus dimulai dengan huruf)
+        if (!id.matches("^[A-Z]{3}[0-9]{3,}$")) {
+            return "Format ID tidak valid!\nFormat yang benar: MBR001, MBR002, dst.\n(3 huruf + minimal 3 angka)";
+        }
+        
+        // Validasi panjang Nama
+        if (nama.length() > 100) {
+            return "Nama Member terlalu panjang! Maksimal 100 karakter.";
+        }
+        
+        // Validasi format nama
+        if (!isValidName(nama)) {
+            return "Nama tidak valid!\nNama hanya boleh mengandung huruf, spasi, dan tanda baca umum.\nMinimal 2 karakter.";
+        }
+        
+        // Validasi panjang Kontak
+        if (kontak.length() > 20) {
+            return "Kontak terlalu panjang! Maksimal 20 karakter.";
+        }
+        
+        // Validasi format kontak
+        if (!isValidContact(kontak)) {
+            return "Format kontak tidak valid!\nKontak harus berupa nomor telepon (8-15 digit).\nContoh: 081234567890 atau +62 812-3456-7890";
+        }
+        
+        return null; // Tidak ada error
+    }
+    
+    /**
+     * Clear semua input field
+     */
+    private void clearFields() {
+        idmember.setText("");
+        namamember.setText("");
+        kontak.setText("");
+        idmember.requestFocus();
+    }
+    
+    /**
+     * Search dengan highlight hasil
+     */
+    private void performSearch(String keyword) {
+        if (keyword.trim().isEmpty()) {
+            tampilData();
+            return;
+        }
+        
+        try {
+            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
+            String user = "inventaris";
+            String pass = "inventaris123";
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            
+            String sql = "SELECT * FROM member WHERE id_member LIKE ? OR nama_member LIKE ? OR kontak LIKE ?";
+            PreparedStatement pst = conn.prepareStatement(sql);
+            String searchPattern = "%" + keyword + "%";
+            pst.setString(1, searchPattern);
+            pst.setString(2, searchPattern);
+            pst.setString(3, searchPattern);
+            
+            ResultSet rs = pst.executeQuery();
+            DefaultTableModel model = (DefaultTableModel) tabelmember.getModel();
+            model.setRowCount(0);
+            
+            while (rs.next()) {
+                model.addRow(new Object[]{
+                    rs.getString("id_member"),
+                    rs.getString("nama_member"),
+                    rs.getString("kontak")
+                });
+            }
+            
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println("Search error: " + e.getMessage());
+        }
+    }
+    
+    /**
+     * Deteksi tipe pencarian berdasarkan pattern
+     */
+    private String detectSearchType(String keyword) {
+        keyword = keyword.trim().toUpperCase();
+        
+        // Deteksi ID (format: 3 huruf + angka, contoh: MBR001)
+        if (keyword.matches("^[A-Z]{3}[0-9]+$")) {
+            return "ID";
+        }
+        
+        // Deteksi Kontak (dimulai dengan angka, +, atau 0)
+        if (keyword.matches("^[+0-9].*")) {
+            return "KONTAK";
+        }
+        
+        // Deteksi Nama (mengandung huruf)
+        if (keyword.matches(".*[A-Z].*")) {
+            return "NAMA";
+        }
+        
+        return "UMUM";
+    }
+    
+    /**
+     * Smart search dengan auto-detection dan optimized query
+     */
+    private SearchResult smartSearch(String keyword) {
+        SearchResult result = new SearchResult();
+        result.keyword = keyword;
+        result.searchType = detectSearchType(keyword);
+        
+        try {
+            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
+            String user = "inventaris";
+            String pass = "inventaris123";
+            Connection conn = DriverManager.getConnection(url, user, pass);
+            
+            String sql;
+            PreparedStatement pst;
+            
+            // Optimized query berdasarkan tipe pencarian
+            switch (result.searchType) {
+                case "ID":
+                    // Prioritas pencarian ID
+                    sql = "SELECT * FROM member WHERE id_member LIKE ? " +
+                          "UNION " +
+                          "SELECT * FROM member WHERE nama_member LIKE ? OR kontak LIKE ?";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, "%" + keyword + "%");
+                    pst.setString(2, "%" + keyword + "%");
+                    pst.setString(3, "%" + keyword + "%");
+                    break;
+                    
+                case "KONTAK":
+                    // Prioritas pencarian kontak
+                    sql = "SELECT * FROM member WHERE kontak LIKE ? " +
+                          "UNION " +
+                          "SELECT * FROM member WHERE id_member LIKE ? OR nama_member LIKE ?";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, "%" + keyword + "%");
+                    pst.setString(2, "%" + keyword + "%");
+                    pst.setString(3, "%" + keyword + "%");
+                    break;
+                    
+                case "NAMA":
+                    // Prioritas pencarian nama
+                    sql = "SELECT * FROM member WHERE nama_member LIKE ? " +
+                          "UNION " +
+                          "SELECT * FROM member WHERE id_member LIKE ? OR kontak LIKE ?";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, "%" + keyword + "%");
+                    pst.setString(2, "%" + keyword + "%");
+                    pst.setString(3, "%" + keyword + "%");
+                    break;
+                    
+                default:
+                    // Pencarian umum
+                    sql = "SELECT * FROM member WHERE id_member LIKE ? OR nama_member LIKE ? OR kontak LIKE ?";
+                    pst = conn.prepareStatement(sql);
+                    pst.setString(1, "%" + keyword + "%");
+                    pst.setString(2, "%" + keyword + "%");
+                    pst.setString(3, "%" + keyword + "%");
+                    break;
+            }
+            
+            ResultSet rs = pst.executeQuery();
+            
+            while (rs.next()) {
+                String[] row = {
+                    rs.getString("id_member"),
+                    rs.getString("nama_member"),
+                    rs.getString("kontak")
+                };
+                result.addResult(row);
+            }
+            
+            conn.close();
+            result.success = true;
+            
+        } catch (SQLException e) {
+            result.success = false;
+            result.errorMessage = e.getMessage();
+        }
+        
+        return result;
+    }
+    
+    /**
+     * Generate search suggestions berdasarkan keyword
+     */
+    private String[] generateSearchSuggestions(String keyword, String searchType) {
+        java.util.List<String> suggestions = new java.util.ArrayList<>();
+        
+        switch (searchType) {
+            case "ID":
+                suggestions.add("Coba format lengkap: MBR001, MBR002, dst");
+                suggestions.add("Coba hanya angka: 001, 002, dst");
+                suggestions.add("Periksa apakah ID sudah benar");
+                break;
+                
+            case "KONTAK":
+                suggestions.add("Coba tanpa kode negara: 081234567890");
+                suggestions.add("Coba dengan +62: +6281234567890");
+                suggestions.add("Coba hanya beberapa digit awal: 0812");
+                break;
+                
+            case "NAMA":
+                suggestions.add("Coba nama depan saja: Andi");
+                suggestions.add("Coba nama belakang: Pratama");
+                suggestions.add("Periksa ejaan nama");
+                break;
+                
+            default:
+                suggestions.add("Coba kata kunci lebih spesifik");
+                suggestions.add("Coba kata kunci lebih pendek");
+                suggestions.add("Periksa ejaan");
+                break;
+        }
+        
+        return suggestions.toArray(new String[0]);
+    }
+    
+    /**
+     * Inner class untuk menyimpan hasil pencarian
+     */
+    private class SearchResult {
+        String keyword;
+        String searchType;
+        java.util.List<String[]> results;
+        boolean success;
+        String errorMessage;
+        
+        SearchResult() {
+            results = new java.util.ArrayList<>();
+            success = false;
+        }
+        
+        void addResult(String[] row) {
+            results.add(row);
+        }
+        
+        int getCount() {
+            return results.size();
+        }
+        
+        String[][] getResultsArray() {
+            return results.toArray(new String[0][]);
+        }
+    }
+    
+    // ========== END HELPER METHODS ==========
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -230,7 +757,7 @@ public class member extends javax.swing.JFrame {
         });
 
         laporan.setBackground(new java.awt.Color(255, 255, 255));
-        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/LAPORAN.png"))); // NOI18N
+        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LAPORAN.png"))); // NOI18N
         laporan.setBorderPainted(false);
         laporan.setContentAreaFilled(false);
         laporan.setFocusPainted(false);
@@ -397,12 +924,49 @@ public class member extends javax.swing.JFrame {
     }//GEN-LAST:event_tabelmemberMouseClicked
 
     private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-        String ID = idmember.getText();
-        String Nama = namamember.getText();
-        String Kontak = kontak.getText();
-
-        if (ID.isEmpty() || Nama.isEmpty()|| Kontak.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi.");
+        // Ambil dan bersihkan input
+        String ID = cleanInput(idmember.getText()).toUpperCase();
+        String Nama = cleanInput(namamember.getText());
+        String Kontak = cleanInput(kontak.getText());
+        
+        // Validasi input
+        String errorMsg = validateInput(ID, Nama, Kontak);
+        if (errorMsg != null) {
+            JOptionPane.showMessageDialog(this, errorMsg, "Validasi Error", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Cek duplikasi ID
+        if (isIDExists(ID)) {
+            int response = JOptionPane.showConfirmDialog(this, 
+                "ID Member '" + ID + "' sudah ada!\n\nApakah Anda ingin menggunakan ID otomatis berikutnya?",
+                "ID Duplikat", 
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+            
+            if (response == JOptionPane.YES_OPTION) {
+                ID = generateNextID();
+                idmember.setText(ID);
+                JOptionPane.showMessageDialog(this, "ID otomatis: " + ID, "Info", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                return;
+            }
+        }
+        
+        // Format kontak ke standar Indonesia
+        String formattedKontak = formatContact(Kontak);
+        
+        // Konfirmasi sebelum simpan
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Simpan data berikut?\n\n" +
+            "ID Member: " + ID + "\n" +
+            "Nama: " + Nama + "\n" +
+            "Kontak: " + formattedKontak,
+            "Konfirmasi Simpan",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
             return;
         }
 
@@ -418,21 +982,29 @@ public class member extends javax.swing.JFrame {
 
             pst.setString(1, ID);
             pst.setString(2, Nama);
-            pst.setString(3, Kontak);
+            pst.setString(3, formattedKontak);
 
             pst.executeUpdate();
 
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
+            JOptionPane.showMessageDialog(this, 
+                "✓ Data berhasil disimpan!\n\n" +
+                "ID: " + ID + "\n" +
+                "Nama: " + Nama + "\n" +
+                "Kontak: " + formattedKontak,
+                "Sukses",
+                JOptionPane.INFORMATION_MESSAGE);
 
-            idmember.setText("");
-            namamember.setText("");
-            kontak.setText("");
-
+            clearFields();
             conn.close();
             tampilData();
 
         } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Data gagal disimpan : " + e.getMessage());
+            JOptionPane.showMessageDialog(this, 
+                "❌ Data gagal disimpan!\n\n" +
+                "Error: " + e.getMessage() + "\n\n" +
+                "Silakan cek kembali data Anda.",
+                "Error Database",
+                JOptionPane.ERROR_MESSAGE);
         }
     }//GEN-LAST:event_simpanActionPerformed
 
@@ -473,17 +1045,28 @@ public class member extends javax.swing.JFrame {
         int baris = tabelmember.getSelectedRow();
 
         if (baris == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus dulu.");
+            JOptionPane.showMessageDialog(this, 
+                "⚠ Pilih data yang ingin dihapus terlebih dahulu!\n\nKlik pada baris data di tabel.",
+                "Tidak Ada Data Dipilih",
+                JOptionPane.WARNING_MESSAGE);
             return;
         }
 
         String id = tabelmember.getValueAt(baris, 0).toString();
+        String nama = tabelmember.getValueAt(baris, 1).toString();
+        String kontak = tabelmember.getValueAt(baris, 2).toString();
 
+        // Konfirmasi dengan detail data
         int konfirmasi = JOptionPane.showConfirmDialog(
             this,
-            "Yakin mau hapus data dengan ID " + id + "?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION
+            "⚠ PERHATIAN: Data yang dihapus tidak dapat dikembalikan!\n\n" +
+            "Apakah Anda yakin ingin menghapus data berikut?\n\n" +
+            "ID Member: " + id + "\n" +
+            "Nama: " + nama + "\n" +
+            "Kontak: " + kontak,
+            "Konfirmasi Hapus Data",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
         );
 
         if (konfirmasi == JOptionPane.YES_OPTION) {
@@ -500,13 +1083,21 @@ public class member extends javax.swing.JFrame {
 
                 int affected = pst.executeUpdate();
                 if (affected > 0) {
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
+                    JOptionPane.showMessageDialog(this, 
+                        "✓ Data berhasil dihapus!\n\n" +
+                        "ID: " + id + "\n" +
+                        "Nama: " + nama,
+                        "Sukses",
+                        JOptionPane.INFORMATION_MESSAGE);
+                    clearFields();
                 } else {
-                    JOptionPane.showMessageDialog(this, "Data tidak ditemukan / gagal dihapus!");
+                    JOptionPane.showMessageDialog(this, 
+                        "❌ Data tidak ditemukan atau gagal dihapus!",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
                 }
 
                 tampilData();
-
                 conn.close();
 
             } catch (SQLException e) {
@@ -518,48 +1109,90 @@ public class member extends javax.swing.JFrame {
     private void cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariActionPerformed
         String key = cariteks.getText().trim();
 
+        // Jika kosong, tampilkan semua data tanpa highlight
         if (key.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Masukkan kata kunci pencarian!");
+            clearTableHighlight();
+            tampilData();
             return;
         }
 
-        try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            String sql = "SELECT * FROM member WHERE id_member LIKE ? OR nama_member LIKE ?OR kontak LIKE ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, "%" + key + "%");
-            pst.setString(2, "%" + key + "%");
-            pst.setString(3, "%" + key + "%");
-
-            ResultSet rs = pst.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) tabelmember.getModel();
-            model.setRowCount(0);
-
-            while (rs.next()) {
-                Object[] row = {
-                    rs.getString("id_member"),
-                    rs.getString("nama_member"),
-                    rs.getString("kontak")
-                };
-                model.addRow(row);
-            }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Pencarian gagal: " + e.getMessage());
+        // Perform smart search
+        SearchResult result = smartSearch(key);
+        
+        if (!result.success) {
+            JOptionPane.showMessageDialog(this, 
+                "Pencarian gagal: " + result.errorMessage,
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
         }
+        
+        // Update tabel dengan hasil
+        DefaultTableModel model = (DefaultTableModel) tabelmember.getModel();
+        model.setRowCount(0);
+        
+        for (String[] row : result.results) {
+            model.addRow(row);
+        }
+        
+        // Apply highlight BIRU MUDA ke hasil pencarian
+        applyTableHighlight(key);
+        
+        // Jika tidak ada hasil, tampilkan pesan singkat
+        if (result.getCount() == 0) {
+            JOptionPane.showMessageDialog(this,
+                "Tidak ada data ditemukan untuk: \"" + key + "\"",
+                "Tidak Ada Hasil",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            // Tawarkan untuk menampilkan semua data
+            int response = JOptionPane.showConfirmDialog(this,
+                "Tampilkan semua data?",
+                "Opsi",
+                JOptionPane.YES_NO_OPTION);
+            
+            if (response == JOptionPane.YES_OPTION) {
+                clearTableHighlight();
+                tampilData();
+                cariteks.setText("");
+            }
+        }
+        // Jika ada hasil, TIDAK ADA DIALOG - langsung highlight saja!
     }//GEN-LAST:event_cariActionPerformed
 
     private void bersikan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bersikan1ActionPerformed
+        // Konfirmasi sebelum clear jika ada data di field
+        if (!idmember.getText().trim().isEmpty() || 
+            !namamember.getText().trim().isEmpty() || 
+            !kontak.getText().trim().isEmpty()) {
+            
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Hapus semua input yang sedang diisi?",
+                "Konfirmasi Clear",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        
         cariteks.setText("");
-        idmember.setText("");
-        namamember.setText("");
-        kontak.setText("");
+        clearFields();
+        clearTableHighlight(); // Clear highlight
+        tampilData(); // Tampilkan semua data
+        
+        // Auto-generate ID baru
+        String nextID = generateNextID();
+        idmember.setText(nextID);
+        
+        JOptionPane.showMessageDialog(this,
+            "✓ Form berhasil dibersihkan!\n\n" +
+            "ID otomatis berikutnya: " + nextID + "\n" +
+            "Highlight pencarian: Dihapus\n" +
+            "Tabel: Menampilkan semua data",
+            "Info",
+            JOptionPane.INFORMATION_MESSAGE);
     }//GEN-LAST:event_bersikan1ActionPerformed
 
     private void laporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_laporanActionPerformed
@@ -633,3 +1266,4 @@ public class member extends javax.swing.JFrame {
     private javax.swing.JButton ubah;
     // End of variables declaration//GEN-END:variables
 }
+

@@ -318,7 +318,7 @@ public class peminjaman extends javax.swing.JFrame {
         idaset.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         laporan.setBackground(new java.awt.Color(255, 255, 255));
-        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/LAPORAN.png"))); // NOI18N
+        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LAPORAN.png"))); // NOI18N
         laporan.setBorderPainted(false);
         laporan.setContentAreaFilled(false);
         laporan.setFocusPainted(false);
