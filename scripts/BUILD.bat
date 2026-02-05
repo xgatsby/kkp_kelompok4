@@ -56,6 +56,7 @@ echo ✓ Compilation successful
 echo.
 echo [4/6] Copying resources...
 xcopy /E /I /Y src\icon build\classes\icon >nul
+xcopy /E /I /Y src\icons build\classes\icons >nul
 xcopy /E /I /Y src\laporan build\classes\laporan >nul
 echo ✓ Resources copied
 

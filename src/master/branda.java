@@ -7,6 +7,8 @@ import java.awt.event.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import ui.ModernTheme;
+import ui.IconManager;
+import javax.swing.Icon;
 import transaksi.mutasi;
 import transaksi.peminjaman;
 
@@ -15,9 +17,10 @@ import transaksi.peminjaman;
  * 
  * Dashboard modern dengan sidebar navigation, top bar, dan content area.
  * Menggunakan ModernTheme untuk konsistensi visual.
+ * Mendukung Light Mode dan Dark Mode.
  * 
  * @author Sistem Inventaris Aset
- * @version 2.0 (Modernized)
+ * @version 3.0 (Dark Mode Support)
  */
 public class branda extends JFrame {
     
@@ -26,6 +29,7 @@ public class branda extends JFrame {
     private JPanel sidebar;
     private JPanel contentArea;
     private JLabel lblTanggal;
+    private JButton btnDarkMode;
     
     // Menu buttons
     private JButton btnBeranda;
@@ -42,6 +46,33 @@ public class branda extends JFrame {
         initComponents();
         setLocationRelativeTo(null);
         tampilkanTanggal();
+        
+        // Register theme change listener untuk refresh UI
+        ModernTheme.addThemeChangeListener(() -> {
+            SwingUtilities.invokeLater(() -> refreshTheme());
+        });
+    }
+    
+    /**
+     * Refresh semua komponen UI saat theme berubah
+     */
+    private void refreshTheme() {
+        // Rebuild UI dengan warna baru
+        getContentPane().removeAll();
+        createTopBar();
+        createSidebar();
+        createContentArea();
+        add(topBar, BorderLayout.NORTH);
+        add(sidebar, BorderLayout.WEST);
+        add(contentArea, BorderLayout.CENTER);
+        
+        // Update window
+        SwingUtilities.updateComponentTreeUI(this);
+        revalidate();
+        repaint();
+        
+        // Update tanggal
+        updateTanggal();
     }
     
     private void initComponents() {
@@ -62,53 +93,110 @@ public class branda extends JFrame {
     }
     
     /**
-     * Membuat top bar dengan title, search, dan user info
+     * Membuat top bar modern dengan shadow, rounded search, avatar dropdown, dan dark mode toggle
+     * Redesign 2025: Mendukung Light/Dark theme
      */
     private void createTopBar() {
-        topBar = new JPanel(new BorderLayout());
-        topBar.setBackground(ModernTheme.BIRU_UTAMA);
+        // Modern top bar dengan shadow effect
+        topBar = ModernTheme.createModernTopBar(ModernTheme.TOPBAR_HEIGHT);
+        topBar.setLayout(new BorderLayout());
+        topBar.setBackground(ModernTheme.getBgTopBar());
         topBar.setPreferredSize(new Dimension(getWidth(), ModernTheme.TOPBAR_HEIGHT));
         topBar.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_L, 0, ModernTheme.SPACING_L));
         
-        // Left section - Title
+        // Left section - Title dengan warna dinamis
         JLabel lblTitle = new JLabel("SISTEM INVENTARIS ASET");
         lblTitle.setFont(ModernTheme.FONT_H3);
-        lblTitle.setForeground(Color.WHITE);
+        lblTitle.setForeground(ModernTheme.getTextPrimary());
         
-        // Center section - Search box (placeholder)
-        JTextField txtSearch = new JTextField();
-        txtSearch.setPreferredSize(new Dimension(300, 36));
-        txtSearch.setFont(ModernTheme.FONT_BODY);
-        txtSearch.setForeground(Color.WHITE);
-        txtSearch.setBackground(new Color(255, 255, 255, 40)); // Semi-transparent white
-        txtSearch.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(255, 255, 255, 80), 1),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
-        
+        // Center section - Rounded search box dengan ikon
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         searchPanel.setOpaque(false);
-        searchPanel.add(txtSearch);
         
-        // Right section - User info and logout
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, ModernTheme.SPACING_M, 0));
+        // Search container dengan icon
+        JPanel searchContainer = new JPanel(new BorderLayout());
+        searchContainer.setOpaque(false);
+        
+        JTextField txtSearch = ModernTheme.createRoundedSearchField("🔍 Cari aset, member, transaksi...");
+        searchContainer.add(txtSearch, BorderLayout.CENTER);
+        searchPanel.add(searchContainer);
+        
+        // Right section - Dark mode toggle, Avatar, dan dropdown
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, ModernTheme.SPACING_S, 0));
         rightPanel.setOpaque(false);
         
-        JLabel lblUser = new JLabel("👤 Admin");
-        lblUser.setFont(ModernTheme.FONT_BODY);
-        lblUser.setForeground(Color.WHITE);
+        // Dark Mode Toggle Button
+        btnDarkMode = new JButton(ModernTheme.isDarkMode() ? "☀️" : "🌙");
+        btnDarkMode.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 18));
+        btnDarkMode.setPreferredSize(new Dimension(40, 40));
+        btnDarkMode.setFocusPainted(false);
+        btnDarkMode.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnDarkMode.setContentAreaFilled(false);
+        btnDarkMode.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
+        btnDarkMode.setToolTipText(ModernTheme.isDarkMode() ? "Switch to Light Mode" : "Switch to Dark Mode");
+        btnDarkMode.addActionListener(e -> {
+            ModernTheme.toggleDarkMode();
+            btnDarkMode.setText(ModernTheme.isDarkMode() ? "☀️" : "🌙");
+            btnDarkMode.setToolTipText(ModernTheme.isDarkMode() ? "Switch to Light Mode" : "Switch to Dark Mode");
+        });
         
-        btnLogout = new JButton("🚪 Keluar");
-        btnLogout.setFont(ModernTheme.FONT_BUTTON);
-        btnLogout.setForeground(Color.WHITE);
-        btnLogout.setBackground(new Color(255, 255, 255, 40));
-        btnLogout.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(255, 255, 255, 80), 1),
-            BorderFactory.createEmptyBorder(8, 16, 8, 16)
-        ));
+        // Avatar dengan background bulat
+        JPanel avatarPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2d = (Graphics2D) g.create();
+                g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2d.setColor(ModernTheme.getAccentBlueBg());
+                g2d.fillOval(0, 0, 40, 40);
+                g2d.dispose();
+            }
+            
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(40, 40);
+            }
+        };
+        avatarPanel.setLayout(new GridBagLayout());
+        avatarPanel.setOpaque(false);
+        JLabel avatarIcon = new JLabel("👤");
+        avatarIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 20));
+        avatarPanel.add(avatarIcon);
+        
+        // User name label
+        JLabel lblUser = new JLabel("Admin");
+        lblUser.setFont(ModernTheme.FONT_BODY);
+        lblUser.setForeground(ModernTheme.getTextPrimary());
+        
+        // Dropdown button
+        btnLogout = new JButton("▼");
+        btnLogout.setFont(new Font("Segoe UI", Font.PLAIN, 10));
+        btnLogout.setForeground(ModernTheme.getTextSecondary());
+        btnLogout.setBackground(ModernTheme.getBgTopBar());
+        btnLogout.setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 8));
         btnLogout.setFocusPainted(false);
         btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnLogout.addActionListener(e -> {
+        btnLogout.setContentAreaFilled(false);
+        
+        // Popup menu untuk dropdown
+        JPopupMenu userMenu = new JPopupMenu();
+        userMenu.setBackground(ModernTheme.getBgCard());
+        userMenu.setBorder(BorderFactory.createLineBorder(ModernTheme.getBorderColor(), 1));
+        
+        JMenuItem menuProfile = new JMenuItem("👤 Profile");
+        menuProfile.setFont(ModernTheme.FONT_BODY);
+        menuProfile.setBackground(ModernTheme.getBgCard());
+        menuProfile.setForeground(ModernTheme.getTextPrimary());
+        
+        JMenuItem menuSettings = new JMenuItem("⚙️ Settings");
+        menuSettings.setFont(ModernTheme.FONT_BODY);
+        menuSettings.setBackground(ModernTheme.getBgCard());
+        menuSettings.setForeground(ModernTheme.getTextPrimary());
+        
+        JMenuItem menuLogout = new JMenuItem("🚪 Keluar");
+        menuLogout.setFont(ModernTheme.FONT_BODY);
+        menuLogout.setBackground(ModernTheme.getBgCard());
+        menuLogout.setForeground(ModernTheme.getTextPrimary());
+        menuLogout.addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(
                 this,
                 "Apakah Anda yakin ingin keluar?",
@@ -121,19 +209,19 @@ public class branda extends JFrame {
             }
         });
         
-        // Hover effect for logout button
-        btnLogout.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                btnLogout.setBackground(new Color(255, 255, 255, 60));
-            }
-            
-            @Override
-            public void mouseExited(MouseEvent e) {
-                btnLogout.setBackground(new Color(255, 255, 255, 40));
-            }
+        userMenu.add(menuProfile);
+        userMenu.add(menuSettings);
+        userMenu.addSeparator();
+        userMenu.add(menuLogout);
+        
+        btnLogout.addActionListener(e -> {
+            userMenu.show(btnLogout, 0, btnLogout.getHeight());
         });
         
+        rightPanel.add(btnDarkMode);
+        rightPanel.add(Box.createHorizontalStrut(8));
+        rightPanel.add(avatarPanel);
+        rightPanel.add(Box.createHorizontalStrut(8));
         rightPanel.add(lblUser);
         rightPanel.add(btnLogout);
         
@@ -143,56 +231,71 @@ public class branda extends JFrame {
     }
     
     /**
-     * Membuat sidebar dengan menu navigasi
+     * Membuat sidebar dengan menu navigasi (Dark Mode Support)
+     * Modern dividers, improved hover effect, dynamic colors
      */
     private void createSidebar() {
         sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(ModernTheme.LATAR_SIDEBAR);
+        sidebar.setBackground(ModernTheme.getBgSidebar());
         sidebar.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, getHeight()));
-        sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ModernTheme.BORDER));
+        sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ModernTheme.getBorderColor()));
         
         // Add spacing at top
         sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
         
         // Beranda menu
-        btnBeranda = createMenuButton("🏠 Beranda", true);
+        btnBeranda = createMenuButton("Beranda", IconManager.getMenuIcon("home", true), true);
         btnBeranda.addActionListener(e -> setActiveMenu(btnBeranda));
         sidebar.add(btnBeranda);
         
-        // DATA MASTER section
-        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
-        JLabel lblMaster = ModernTheme.createStyledLabel("DATA MASTER", "label");
+        // Divider tipis
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_M));
+        sidebar.add(createDivider());
+        
+        // DATA MASTER section header
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_M));
+        JLabel lblMaster = new JLabel("DATA MASTER");
+        lblMaster.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        lblMaster.setForeground(ModernTheme.getTextMuted());
         lblMaster.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_M, ModernTheme.SPACING_S, 0));
+        lblMaster.setAlignmentX(Component.LEFT_ALIGNMENT);
         sidebar.add(lblMaster);
         
-        btnMember = createMenuButton("👥 Data Member", false);
+        btnMember = createMenuButton("Data Member", IconManager.getMenuIcon("people", false), false);
         btnMember.addActionListener(e -> memberActionPerformed(null));
         sidebar.add(btnMember);
         
-        btnAset = createMenuButton("📦 Data Aset", false);
+        btnAset = createMenuButton("Data Aset", IconManager.getMenuIcon("inventory", false), false);
         btnAset.addActionListener(e -> asetActionPerformed(null));
         sidebar.add(btnAset);
         
-        btnKategori = createMenuButton("🏷️ Data Kategori", false);
+        btnKategori = createMenuButton("Data Kategori", IconManager.getMenuIcon("category", false), false);
         btnKategori.addActionListener(e -> kategoriActionPerformed(null));
         sidebar.add(btnKategori);
         
-        btnLokasi = createMenuButton("📍 Data Lokasi", false);
+        btnLokasi = createMenuButton("Data Lokasi", IconManager.getMenuIcon("location", false), false);
         btnLokasi.addActionListener(e -> lokasiActionPerformed(null));
         sidebar.add(btnLokasi);
         
-        // TRANSAKSI section
-        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
-        JLabel lblTransaksi = ModernTheme.createStyledLabel("TRANSAKSI", "label");
+        // Divider tipis
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_M));
+        sidebar.add(createDivider());
+        
+        // TRANSAKSI section header
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_M));
+        JLabel lblTransaksi = new JLabel("TRANSAKSI");
+        lblTransaksi.setFont(new Font("Segoe UI", Font.BOLD, 11));
+        lblTransaksi.setForeground(ModernTheme.getTextMuted());
         lblTransaksi.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_M, ModernTheme.SPACING_S, 0));
+        lblTransaksi.setAlignmentX(Component.LEFT_ALIGNMENT);
         sidebar.add(lblTransaksi);
         
-        btnPeminjaman = createMenuButton("🔄 Peminjaman Aset", false);
+        btnPeminjaman = createMenuButton("Peminjaman Aset", IconManager.getMenuIcon("swap", false), false);
         btnPeminjaman.addActionListener(e -> peminjamanActionPerformed(null));
         sidebar.add(btnPeminjaman);
         
-        btnMutasi = createMenuButton("↔️ Mutasi Aset", false);
+        btnMutasi = createMenuButton("Mutasi Aset", IconManager.getMenuIcon("transfer", false), false);
         btnMutasi.addActionListener(e -> mutasiActionPerformed(null));
         sidebar.add(btnMutasi);
         
@@ -201,45 +304,65 @@ public class branda extends JFrame {
     }
     
     /**
-     * Membuat button menu untuk sidebar
+     * Membuat divider horizontal untuk sidebar (Dark Mode Support)
      */
-    private JButton createMenuButton(String text, boolean isActive) {
-        JButton button = new JButton(text);
+    private JPanel createDivider() {
+        JPanel divider = new JPanel();
+        divider.setBackground(ModernTheme.isDarkMode() ? new Color(255, 255, 255, 15) : new Color(0, 0, 0, 8));
+        divider.setMaximumSize(new Dimension(ModernTheme.SIDEBAR_WIDTH - 32, 1));
+        divider.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH - 32, 1));
+        divider.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return divider;
+    }
+    
+    /**
+     * Membuat button menu untuk sidebar (Dark Mode Support)
+     * Menggunakan SVG icons dari IconManager
+     */
+    private JButton createMenuButton(String text, Icon icon, boolean isActive) {
+        JButton button = new JButton(text, icon);
         button.setFont(ModernTheme.FONT_BODY);
         button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMaximumSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 48));
-        button.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 48));
-        button.setBorder(BorderFactory.createEmptyBorder(12, ModernTheme.SPACING_M, 12, ModernTheme.SPACING_M));
+        button.setIconTextGap(12);
+        button.setMaximumSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 44));
+        button.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 44));
+        button.setBorder(BorderFactory.createEmptyBorder(10, ModernTheme.SPACING_M, 10, ModernTheme.SPACING_M));
         button.setFocusPainted(false);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setContentAreaFilled(false);
         button.setOpaque(true);
         
+        Color activeBg = ModernTheme.getAccentBlueBg();
+        Color normalBg = ModernTheme.getBgSidebar();
+        Color hoverBg = ModernTheme.getBgHover();
+        
         if (isActive) {
-            button.setBackground(new Color(227, 242, 253)); // #E3F2FD
-            button.setForeground(ModernTheme.BIRU_UTAMA);
+            button.setBackground(activeBg);
+            button.setForeground(ModernTheme.getAccentBlue());
             button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createMatteBorder(0, 4, 0, 0, ModernTheme.BIRU_UTAMA),
-                BorderFactory.createEmptyBorder(12, 12, 12, ModernTheme.SPACING_M)
+                BorderFactory.createMatteBorder(0, 3, 0, 0, ModernTheme.getAccentBlue()),
+                BorderFactory.createEmptyBorder(10, 13, 10, ModernTheme.SPACING_M)
             ));
         } else {
-            button.setBackground(ModernTheme.LATAR_SIDEBAR);
-            button.setForeground(new Color(97, 97, 97)); // #616161
+            button.setBackground(normalBg);
+            button.setForeground(ModernTheme.getTextSecondary());
         }
         
-        // Hover effect
+        // Improved hover effect dengan dynamic colors
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
                 if (!isMenuActive(button)) {
-                    button.setBackground(new Color(238, 238, 238)); // #EEEEEE
+                    button.setBackground(hoverBg);
+                    button.setForeground(ModernTheme.getTextPrimary());
                 }
             }
             
             @Override
             public void mouseExited(MouseEvent e) {
                 if (!isMenuActive(button)) {
-                    button.setBackground(ModernTheme.LATAR_SIDEBAR);
+                    button.setBackground(normalBg);
+                    button.setForeground(ModernTheme.getTextSecondary());
                 }
             }
         });
@@ -248,23 +371,23 @@ public class branda extends JFrame {
     }
     
     /**
-     * Set menu sebagai active dan reset yang lain
+     * Set menu sebagai active dan reset yang lain (Dark Mode Support)
      */
     private void setActiveMenu(JButton activeButton) {
         JButton[] allButtons = {btnBeranda, btnMember, btnAset, btnKategori, btnLokasi, btnPeminjaman, btnMutasi};
         
         for (JButton btn : allButtons) {
             if (btn == activeButton) {
-                btn.setBackground(new Color(227, 242, 253)); // #E3F2FD
-                btn.setForeground(ModernTheme.BIRU_UTAMA);
+                btn.setBackground(ModernTheme.getAccentBlueBg());
+                btn.setForeground(ModernTheme.getAccentBlue());
                 btn.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createMatteBorder(0, 4, 0, 0, ModernTheme.BIRU_UTAMA),
-                    BorderFactory.createEmptyBorder(12, 12, 12, ModernTheme.SPACING_M)
+                    BorderFactory.createMatteBorder(0, 3, 0, 0, ModernTheme.getAccentBlue()),
+                    BorderFactory.createEmptyBorder(10, 13, 10, ModernTheme.SPACING_M)
                 ));
             } else {
-                btn.setBackground(ModernTheme.LATAR_SIDEBAR);
-                btn.setForeground(new Color(97, 97, 97));
-                btn.setBorder(BorderFactory.createEmptyBorder(12, ModernTheme.SPACING_M, 12, ModernTheme.SPACING_M));
+                btn.setBackground(ModernTheme.getBgSidebar());
+                btn.setForeground(ModernTheme.getTextSecondary());
+                btn.setBorder(BorderFactory.createEmptyBorder(10, ModernTheme.SPACING_M, 10, ModernTheme.SPACING_M));
             }
         }
     }
@@ -273,22 +396,22 @@ public class branda extends JFrame {
      * Check apakah menu sedang active
      */
     private boolean isMenuActive(JButton button) {
-        return button.getBackground().equals(new Color(227, 242, 253));
+        return button.getBackground().equals(ModernTheme.getAccentBlueBg());
     }
     
     /**
-     * Membuat content area dengan welcome card dan statistics
+     * Membuat content area dengan welcome card dan statistics (Dark Mode Support)
      */
     private void createContentArea() {
         contentArea = new JPanel();
         contentArea.setLayout(new BorderLayout());
-        contentArea.setBackground(ModernTheme.LATAR_UTAMA);
+        contentArea.setBackground(ModernTheme.getBgPrimary());
         contentArea.setBorder(BorderFactory.createEmptyBorder(ModernTheme.SPACING_L, ModernTheme.SPACING_L, ModernTheme.SPACING_L, ModernTheme.SPACING_L));
         
         // Main content panel with vertical layout
         JPanel mainContent = new JPanel();
         mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
-        mainContent.setBackground(ModernTheme.LATAR_UTAMA);
+        mainContent.setBackground(ModernTheme.getBgPrimary());
         
         // Welcome card
         JPanel welcomeCard = createWelcomeCard();
@@ -308,22 +431,37 @@ public class branda extends JFrame {
     }
     
     /**
-     * Membuat welcome card
+     * Membuat welcome card (Dark Mode Support)
+     * Typography hierarchy yang lebih baik dengan dynamic colors
      */
     private JPanel createWelcomeCard() {
-        JPanel card = ModernTheme.createStyledPanel();
-        ModernTheme.applyCardStyle(card);
+        JPanel card = ModernTheme.createElevatedCardDynamic(16);
         card.setLayout(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        card.setOpaque(false);
         
-        // Left section - Welcome text
+        // Left section - Welcome text dengan hierarchy
         JPanel leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
         leftPanel.setOpaque(false);
         
-        JLabel lblWelcome = ModernTheme.createStyledLabel("Halo, Selamat Datang!", "h1");
-        JLabel lblSubtitle = ModernTheme.createStyledLabel("Sistem Inventaris Aset SMA Negeri 62 Jakarta", "body");
-        JLabel lblDescription = ModernTheme.createStyledLabel("Aplikasi Berbasis Desktop", "caption");
+        // "Halo, Selamat Datang!" - besar dan bold
+        JLabel lblWelcome = new JLabel("Halo, Selamat Datang!");
+        lblWelcome.setFont(new Font("Segoe UI", Font.BOLD, 32));
+        lblWelcome.setForeground(ModernTheme.getTextPrimary());
+        lblWelcome.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Subtitle - medium
+        JLabel lblSubtitle = new JLabel("Sistem Inventaris Aset SMA Negeri 62 Jakarta");
+        lblSubtitle.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+        lblSubtitle.setForeground(ModernTheme.getTextSecondary());
+        lblSubtitle.setAlignmentX(Component.LEFT_ALIGNMENT);
+        
+        // Description - kecil
+        JLabel lblDescription = new JLabel("Aplikasi Berbasis Desktop");
+        lblDescription.setFont(ModernTheme.FONT_CAPTION);
+        lblDescription.setForeground(ModernTheme.getTextMuted());
+        lblDescription.setAlignmentX(Component.LEFT_ALIGNMENT);
         
         leftPanel.add(lblWelcome);
         leftPanel.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
@@ -331,108 +469,119 @@ public class branda extends JFrame {
         leftPanel.add(Box.createVerticalStrut(ModernTheme.SPACING_XS));
         leftPanel.add(lblDescription);
         
-        // Right section - Date
-        lblTanggal = ModernTheme.createStyledLabel("", "body");
-        lblTanggal.setForeground(ModernTheme.TEKS_SEKUNDER);
+        // Right section - Date dengan ikon kalender
+        JPanel rightPanel = new JPanel();
+        rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
+        rightPanel.setOpaque(false);
+        
+        JLabel lblDateIcon = new JLabel("📅");
+        lblDateIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 24));
+        lblDateIcon.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        lblTanggal = new JLabel();
+        lblTanggal.setFont(ModernTheme.FONT_BODY);
+        lblTanggal.setForeground(ModernTheme.getTextSecondary());
+        lblTanggal.setAlignmentX(Component.RIGHT_ALIGNMENT);
+        
+        rightPanel.add(lblDateIcon);
+        rightPanel.add(Box.createVerticalStrut(4));
+        rightPanel.add(lblTanggal);
         
         card.add(leftPanel, BorderLayout.WEST);
-        card.add(lblTanggal, BorderLayout.EAST);
+        card.add(rightPanel, BorderLayout.EAST);
         
         return card;
     }
     
     /**
-     * Membuat panel statistics cards
+     * Membuat panel statistics cards (Dark Mode Support)
+     * Elevated cards dengan dynamic colors
      */
     private JPanel createStatisticsPanel() {
-        JPanel panel = new JPanel(new GridLayout(1, 3, ModernTheme.SPACING_M, 0));
+        JPanel panel = new JPanel(new GridLayout(1, 3, ModernTheme.SPACING_L, 0));
         panel.setOpaque(false);
-        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
         
-        // Total Aset card
-        JPanel asetCard = createStatCard("📦", "Total Aset", "125", ModernTheme.BIRU_UTAMA);
+        // Total Aset card - Biru
+        JPanel asetCard = ModernTheme.createStatisticsCardDynamic(
+            "📦", "Total Aset", "125", 
+            ModernTheme.getAccentBlue(), ModernTheme.getAccentBlueBg()
+        );
         panel.add(asetCard);
         
-        // Total Member card
-        JPanel memberCard = createStatCard("👥", "Total Member", "45", ModernTheme.HIJAU_SEKUNDER);
+        // Total Member card - Hijau
+        JPanel memberCard = ModernTheme.createStatisticsCardDynamic(
+            "👥", "Total Member", "45", 
+            ModernTheme.getAccentGreen(), ModernTheme.getAccentGreenBg()
+        );
         panel.add(memberCard);
         
-        // Peminjaman Aktif card
-        JPanel peminjamanCard = createStatCard("🔄", "Peminjaman Aktif", "23", ModernTheme.PERINGATAN);
+        // Peminjaman Aktif card - Oranye
+        JPanel peminjamanCard = ModernTheme.createStatisticsCardDynamic(
+            "🔄", "Peminjaman Aktif", "23", 
+            ModernTheme.getAccentOrange(), ModernTheme.getAccentOrangeBg()
+        );
         panel.add(peminjamanCard);
         
         return panel;
     }
     
     /**
-     * Membuat single statistics card
-     */
-    private JPanel createStatCard(String icon, String label, String value, Color accentColor) {
-        JPanel card = ModernTheme.createStyledPanel();
-        ModernTheme.applyCardStyle(card);
-        card.setLayout(new BorderLayout());
-        
-        // Icon
-        JLabel lblIcon = new JLabel(icon);
-        lblIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 32));
-        lblIcon.setForeground(accentColor);
-        
-        // Value and label
-        JPanel textPanel = new JPanel();
-        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
-        textPanel.setOpaque(false);
-        
-        JLabel lblValue = new JLabel(value);
-        lblValue.setFont(new Font("Segoe UI", Font.BOLD, 36));
-        lblValue.setForeground(ModernTheme.TEKS_UTAMA);
-        
-        JLabel lblLabel = ModernTheme.createStyledLabel(label, "body");
-        lblLabel.setForeground(ModernTheme.TEKS_SEKUNDER);
-        
-        textPanel.add(lblValue);
-        textPanel.add(lblLabel);
-        
-        card.add(lblIcon, BorderLayout.WEST);
-        card.add(textPanel, BorderLayout.CENTER);
-        
-        return card;
-    }
-    
-    /**
-     * Membuat activity feed card
+     * Membuat activity feed card (Dark Mode Support)
+     * List card dengan dynamic colors
      */
     private JPanel createActivityCard() {
-        JPanel card = ModernTheme.createStyledPanel();
-        ModernTheme.applyCardStyle(card);
+        JPanel card = ModernTheme.createElevatedCardDynamic(16);
         card.setLayout(new BorderLayout());
-        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 280));
+        card.setOpaque(false);
         
-        JLabel lblTitle = ModernTheme.createStyledLabel("📋 Aktivitas Terbaru", "h3");
+        // Header dengan title dan "Lihat Semua" button
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setOpaque(false);
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, ModernTheme.SPACING_M, 0));
         
+        JLabel lblTitle = new JLabel("📋 Aktivitas Terbaru");
+        lblTitle.setFont(ModernTheme.FONT_H3);
+        lblTitle.setForeground(ModernTheme.getTextPrimary());
+        
+        JButton btnViewAll = new JButton("Lihat Semua →");
+        btnViewAll.setFont(ModernTheme.FONT_CAPTION);
+        btnViewAll.setForeground(ModernTheme.getAccentBlue());
+        btnViewAll.setBackground(ModernTheme.getBgCard());
+        btnViewAll.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
+        btnViewAll.setFocusPainted(false);
+        btnViewAll.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnViewAll.setContentAreaFilled(false);
+        btnViewAll.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnViewAll.setForeground(ModernTheme.MODERN_BLUE_HOVER);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnViewAll.setForeground(ModernTheme.getAccentBlue());
+            }
+        });
+        
+        headerPanel.add(lblTitle, BorderLayout.WEST);
+        headerPanel.add(btnViewAll, BorderLayout.EAST);
+        
+        // Activity list dengan modern items
         JPanel activityList = new JPanel();
         activityList.setLayout(new BoxLayout(activityList, BoxLayout.Y_AXIS));
-        activityList.setOpaque(false);
+        activityList.setBackground(ModernTheme.getBgCard());
         
-        activityList.add(createActivityItem("• Peminjaman Laptop - 2 jam lalu"));
-        activityList.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
-        activityList.add(createActivityItem("• Mutasi Proyektor - 5 jam lalu"));
-        activityList.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
-        activityList.add(createActivityItem("• Tambah Aset Baru - 1 hari lalu"));
+        // Activity items dengan ikon, teks, dan timestamp
+        activityList.add(ModernTheme.createActivityItemDynamic("💻", "Peminjaman Laptop Dell XPS 15", "2 jam lalu"));
+        activityList.add(ModernTheme.createActivityItemDynamic("📽️", "Mutasi Proyektor ke Ruang Rapat", "5 jam lalu"));
+        activityList.add(ModernTheme.createActivityItemDynamic("➕", "Tambah Aset Baru - Printer HP", "1 hari lalu"));
+        activityList.add(ModernTheme.createActivityItemDynamic("📦", "Pengembalian Scanner Epson", "2 hari lalu"));
         
-        card.add(lblTitle, BorderLayout.NORTH);
-        card.add(Box.createVerticalStrut(ModernTheme.SPACING_M), BorderLayout.CENTER);
-        card.add(activityList, BorderLayout.SOUTH);
+        card.add(headerPanel, BorderLayout.NORTH);
+        card.add(activityList, BorderLayout.CENTER);
         
         return card;
-    }
-    
-    /**
-     * Membuat single activity item
-     */
-    private JLabel createActivityItem(String text) {
-        JLabel label = ModernTheme.createStyledLabel(text, "body");
-        label.setForeground(ModernTheme.TEKS_SEKUNDER);
-        return label;
     }
     
     /**

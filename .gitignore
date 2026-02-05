@@ -10,6 +10,7 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+.kiro/settings/
 
 # Compiled files
 *.class
@@ -40,8 +41,6 @@ desktop.ini
 .vscode/
 .idea/
 *.iml
-.kiro/
-.serena/
 
 
 
@@ -88,3 +87,9 @@ query
 # ✅ .gitignore
 # ✅ manifest.mf (Build config)
 # ============================================
+
+.kiro/
+.serena/
+.gemini/
+dist/
+build/
