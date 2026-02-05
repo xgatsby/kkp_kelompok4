@@ -43,6 +43,8 @@ desktop.ini
 .kiro/
 .serena/
 
+
+
 # Backup files
 *.bak
 *.tmp
