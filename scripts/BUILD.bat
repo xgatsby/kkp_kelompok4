@@ -38,6 +38,7 @@ echo Ini akan memakan waktu beberapa saat...
 javac -encoding UTF-8 -source 8 -target 8 ^
     -d build\classes ^
     -cp "Libraries\*" ^
+    src\ui\*.java ^
     src\koneksi\*.java ^
     src\master\*.java ^
     src\transaksi\*.java

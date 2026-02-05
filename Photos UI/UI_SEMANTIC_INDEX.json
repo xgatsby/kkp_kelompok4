@@ -1,0 +1,345 @@
+{
+  "metadata": {
+    "application": "Sistem Inventaris Aset Sekolah",
+    "institution": "SMA Negeri 62 Jakarta",
+    "technology": "Java Swing Desktop Application",
+    "reporting_engine": "JasperReports",
+    "generated_date": "2026-02-05",
+    "total_screens": 13,
+    "total_files": 28
+  },
+  "screens": [
+    {
+      "id": "login",
+      "name": "Login Screen",
+      "category": "authentication",
+      "files": {
+        "screenshot": "Login.PNG",
+        "documentation": "Login.md"
+      },
+      "purpose": "User authentication entry point",
+      "components": [
+        "Username input field",
+        "Password input field",
+        "LOGIN button"
+      ],
+      "technology": ["JFrame", "JTextField", "JPasswordField", "JButton"],
+      "keywords": ["login", "authentication", "username", "password", "entry"],
+      "user_actions": ["login", "reset"]
+    },
+    {
+      "id": "dashboard",
+      "name": "Dashboard",
+      "category": "navigation",
+      "files": {
+        "screenshot": "Dashboard.PNG",
+        "documentation": "Dashboard.md"
+      },
+      "purpose": "Main landing page with navigation menu",
+      "components": [
+        "Menu Bar (File, Master Data, Transaksi, Laporan, Logout)",
+        "Sidebar Navigation",
+        "Welcome Message",
+        "Date Display"
+      ],
+      "technology": ["JFrame", "JMenuBar", "JPanel"],
+      "keywords": ["dashboard", "home", "navigation", "menu", "main"],
+      "navigation_options": {
+        "master_data": ["Data Member", "Data Aset", "Data Kategori", "Data Lokasi"],
+        "transactions": ["Peminjaman Aset", "Mutasi Aset"],
+        "reports": ["All reports"]
+      }
+    },
+    {
+      "id": "form_member",
+      "name": "Form Data Member",
+      "category": "master_data",
+      "files": {
+        "screenshot": "Form Data Member.PNG",
+        "documentation": "Form Data Member.md"
+      },
+      "purpose": "CRUD operations for member data management",
+      "fields": [
+        {"name": "ID Member", "type": "text", "auto_generated": true},
+        {"name": "Nama Member", "type": "text"},
+        {"name": "Kontak", "type": "text"}
+      ],
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["member", "user", "contact", "crud", "manage"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "form_aset",
+      "name": "Form Data Aset",
+      "category": "master_data",
+      "files": {
+        "screenshot": "Form Data Aset.PNG",
+        "documentation": "form data aset.md"
+      },
+      "purpose": "Asset management and tracking",
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["asset", "inventory", "equipment", "crud", "manage"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "form_kategori",
+      "name": "Form Data Kategori",
+      "category": "master_data",
+      "files": {
+        "screenshot": "Form Data Kategori.PNG",
+        "documentation": "form data kategori.md"
+      },
+      "purpose": "Category management for asset classification",
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["category", "classification", "type", "crud", "manage"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "form_lokasi",
+      "name": "Form Data Lokasi",
+      "category": "master_data",
+      "files": {
+        "screenshot": "Form Data Lokasi.PNG",
+        "documentation": "form data lokasi.md"
+      },
+      "purpose": "Location management for asset tracking",
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["location", "place", "room", "crud", "manage"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "form_peminjaman",
+      "name": "Form Data Peminjaman",
+      "category": "transaction",
+      "files": {
+        "screenshot": "Form Data Peminjaman.PNG",
+        "documentation": "form data peminjaman.md"
+      },
+      "purpose": "Asset borrowing/loan transaction management",
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["loan", "borrow", "lending", "transaction", "crud"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "form_mutasi",
+      "name": "Form Data Mutasi",
+      "category": "transaction",
+      "files": {
+        "screenshot": "Form Data Mutasi.PNG",
+        "documentation": "form data mutasi.md"
+      },
+      "purpose": "Asset transfer/mutation transaction management",
+      "actions": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "has_table": true,
+      "has_print": true,
+      "has_search": true,
+      "technology": ["JTextField", "JButton", "JTable", "JScrollPane"],
+      "keywords": ["transfer", "mutation", "move", "transaction", "crud"],
+      "user_actions": ["create", "read", "update", "delete", "search", "print"]
+    },
+    {
+      "id": "report_aset",
+      "name": "Laporan Data Aset",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Data Aset.PNG",
+        "documentation": "laporan (print) data aset.md"
+      },
+      "purpose": "Printable report of all assets",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with asset information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "asset", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    },
+    {
+      "id": "report_kategori",
+      "name": "Laporan Data Kategori",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Data Kategori.PNG",
+        "documentation": "laporan (print) data kategori.md"
+      },
+      "purpose": "Printable report of all categories",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with category information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "category", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    },
+    {
+      "id": "report_lokasi",
+      "name": "Laporan Data Lokasi",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Data Lokasi.PNG",
+        "documentation": "laporan data lokasi_mutasi_peminjaman.md"
+      },
+      "purpose": "Printable report of all locations",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with location information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "location", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    },
+    {
+      "id": "report_member",
+      "name": "Laporan Data Member",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Data Member.PNG",
+        "documentation": "laporan (print) data member.md"
+      },
+      "purpose": "Printable report of all members",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with member information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "member", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    },
+    {
+      "id": "report_peminjaman",
+      "name": "Laporan Data Peminjaman",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Data Peminjaman.PNG",
+        "documentation": "laporan data lokasi_mutasi_peminjaman.md"
+      },
+      "purpose": "Printable report of all loan transactions",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with loan transaction information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "loan", "transaction", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    },
+    {
+      "id": "report_mutasi",
+      "name": "Laporan Mutasi",
+      "category": "report",
+      "files": {
+        "screenshot": "Laporan (print) Mutasi.PNG",
+        "documentation": "laporan data lokasi_mutasi_peminjaman.md"
+      },
+      "purpose": "Printable report of all asset mutations",
+      "report_format": {
+        "header": "School logo and name",
+        "body": "Data table with mutation transaction information",
+        "footer": "Print date"
+      },
+      "technology": ["JasperReports", "JRXML"],
+      "keywords": ["report", "print", "mutation", "transfer", "transaction", "pdf", "document"],
+      "user_actions": ["view", "print", "export"]
+    }
+  ],
+  "design_patterns": {
+    "common_ui_elements": {
+      "header": ["Welcome message", "Search functionality", "Branda icon"],
+      "form_title": ["Bold large font", "Horizontal separator line"],
+      "input_section": ["Left-aligned labels", "Right-aligned input fields", "Consistent spacing"],
+      "action_buttons": ["SIMPAN", "UBAH", "HAPUS", "BERSIKAN"],
+      "data_table": ["White background", "Gray headers", "Scrollable", "Print icon"],
+      "footer": ["Date display", "Format: Day, DD Month YYYY"]
+    },
+    "color_scheme": {
+      "primary_background": "#FFFFFF",
+      "secondary_background": "Light Gray",
+      "text": "#000000",
+      "buttons": "Gray",
+      "borders": "Dark Gray/Black"
+    },
+    "typography": {
+      "titles": "Large, Bold, Uppercase",
+      "labels": "Standard, Left-aligned",
+      "data": "Standard, Black"
+    }
+  },
+  "navigation_flow": {
+    "entry_point": "login",
+    "main_hub": "dashboard",
+    "master_data_forms": ["form_member", "form_aset", "form_kategori", "form_lokasi"],
+    "transaction_forms": ["form_peminjaman", "form_mutasi"],
+    "reports": ["report_aset", "report_kategori", "report_lokasi", "report_member", "report_peminjaman", "report_mutasi"],
+    "exit_point": "logout"
+  },
+  "technology_stack": {
+    "ui_framework": "Java Swing",
+    "components": ["JFrame", "JPanel", "JTextField", "JPasswordField", "JButton", "JTable", "JScrollPane", "JMenuBar"],
+    "reporting": "JasperReports",
+    "layout_managers": ["GroupLayout", "GridBagLayout", "BorderLayout"]
+  },
+  "statistics": {
+    "total_screens": 13,
+    "by_category": {
+      "authentication": 1,
+      "navigation": 1,
+      "master_data": 4,
+      "transaction": 2,
+      "report": 6
+    },
+    "total_files": 28,
+    "by_type": {
+      "png_images": 19,
+      "markdown_docs": 8,
+      "logo": 1
+    }
+  },
+  "search_index": {
+    "by_functionality": {
+      "authentication": ["login"],
+      "dashboard": ["dashboard"],
+      "member_management": ["form_member", "report_member"],
+      "asset_management": ["form_aset", "report_aset"],
+      "category_management": ["form_kategori", "report_kategori"],
+      "location_management": ["form_lokasi", "report_lokasi"],
+      "loan_management": ["form_peminjaman", "report_peminjaman"],
+      "transfer_management": ["form_mutasi", "report_mutasi"]
+    },
+    "by_component_type": {
+      "forms": ["login", "form_member", "form_aset", "form_kategori", "form_lokasi", "form_peminjaman", "form_mutasi"],
+      "reports": ["report_aset", "report_kategori", "report_lokasi", "report_member", "report_peminjaman", "report_mutasi"],
+      "navigation": ["dashboard"]
+    },
+    "by_user_action": {
+      "create": ["form_member", "form_aset", "form_kategori", "form_lokasi", "form_peminjaman", "form_mutasi"],
+      "read": ["All forms with tables", "All reports"],
+      "update": ["form_member", "form_aset", "form_kategori", "form_lokasi", "form_peminjaman", "form_mutasi"],
+      "delete": ["form_member", "form_aset", "form_kategori", "form_lokasi", "form_peminjaman", "form_mutasi"],
+      "print": ["All reports", "Print icons in forms"]
+    }
+  }
+}

@@ -41,6 +41,7 @@ desktop.ini
 .idea/
 *.iml
 .kiro/
+.serena/
 
 # Backup files
 *.bak

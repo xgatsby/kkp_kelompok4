@@ -1,360 +1,496 @@
 package master;
 
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.util.HashMap;
-import javax.swing.JOptionPane;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.view.JasperViewer;
+import javax.swing.*;
+import javax.swing.border.*;
+import java.awt.*;
+import java.awt.event.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import ui.ModernTheme;
 import transaksi.mutasi;
 import transaksi.peminjaman;
 
-public class branda extends javax.swing.JFrame {
-
+/**
+ * Dashboard Utama - Sistem Inventaris Aset SMA Negeri 62 Jakarta
+ * 
+ * Dashboard modern dengan sidebar navigation, top bar, dan content area.
+ * Menggunakan ModernTheme untuk konsistensi visual.
+ * 
+ * @author Sistem Inventaris Aset
+ * @version 2.0 (Modernized)
+ */
+public class branda extends JFrame {
+    
+    // Components
+    private JPanel topBar;
+    private JPanel sidebar;
+    private JPanel contentArea;
+    private JLabel lblTanggal;
+    
+    // Menu buttons
+    private JButton btnBeranda;
+    private JButton btnMember;
+    private JButton btnAset;
+    private JButton btnKategori;
+    private JButton btnLokasi;
+    private JButton btnPeminjaman;
+    private JButton btnMutasi;
+    private JButton btnLogout;
+    
     public branda() {
+        ModernTheme.applyTheme();
         initComponents();
+        setLocationRelativeTo(null);
         tampilkanTanggal();
     }
-    private void tampilkanTanggal() {
-        javax.swing.Timer timer = new javax.swing.Timer(60000, (e) -> {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-            String tgl = sdf.format(new java.util.Date());
-            tanggal.setText(tgl);
-        });
-        timer.start();
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-        String tgl = sdf.format(new java.util.Date());
-        tanggal.setText(tgl);
-    }
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    
     private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        tanggal = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        member = new javax.swing.JButton();
-        aset = new javax.swing.JButton();
-        kategori = new javax.swing.JButton();
-        lokasi = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        peminjaman = new javax.swing.JButton();
-        mutasi = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setMaximumSize(new java.awt.Dimension(1315, 700));
-        jPanel1.setMinimumSize(new java.awt.Dimension(1315, 700));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setText("Halo, Selamat Datang !");
-
-        tanggal.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        tanggal.setText("Tanggal Hari ini");
-
-        jLabel5.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel5.setText("DI SMA NEGERI 62 JAKARTA ");
-
-        jLabel6.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel6.setText("PERANCANGAN  SISTEM  INVENTARIS ASET ");
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel7.setText("Aplikasi Berbasis Desktop");
-
-        jPanel4.setBackground(new java.awt.Color(204, 204, 204));
-
-        jLabel2.setFont(new java.awt.Font("Times New Roman", 1, 14)); // NOI18N
-        jLabel2.setText("Form Data Master");
-
-        member.setBackground(new java.awt.Color(255, 255, 255));
-        member.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/USER.png"))); // NOI18N
-        member.setText("Data Member");
-        member.setBorderPainted(false);
-        member.setContentAreaFilled(false);
-        member.setFocusPainted(false);
-        member.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        member.setMaximumSize(new java.awt.Dimension(96, 28));
-        member.setMinimumSize(new java.awt.Dimension(96, 28));
-        member.setOpaque(true);
-        member.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                memberActionPerformed(evt);
+        setTitle("Dashboard - Sistem Inventaris Aset");
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setSize(1280, 720);
+        setLayout(new BorderLayout());
+        
+        // Create main components
+        createTopBar();
+        createSidebar();
+        createContentArea();
+        
+        // Add to frame
+        add(topBar, BorderLayout.NORTH);
+        add(sidebar, BorderLayout.WEST);
+        add(contentArea, BorderLayout.CENTER);
+    }
+    
+    /**
+     * Membuat top bar dengan title, search, dan user info
+     */
+    private void createTopBar() {
+        topBar = new JPanel(new BorderLayout());
+        topBar.setBackground(ModernTheme.BIRU_UTAMA);
+        topBar.setPreferredSize(new Dimension(getWidth(), ModernTheme.TOPBAR_HEIGHT));
+        topBar.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_L, 0, ModernTheme.SPACING_L));
+        
+        // Left section - Title
+        JLabel lblTitle = new JLabel("SISTEM INVENTARIS ASET");
+        lblTitle.setFont(ModernTheme.FONT_H3);
+        lblTitle.setForeground(Color.WHITE);
+        
+        // Center section - Search box (placeholder)
+        JTextField txtSearch = new JTextField();
+        txtSearch.setPreferredSize(new Dimension(300, 36));
+        txtSearch.setFont(ModernTheme.FONT_BODY);
+        txtSearch.setForeground(Color.WHITE);
+        txtSearch.setBackground(new Color(255, 255, 255, 40)); // Semi-transparent white
+        txtSearch.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(255, 255, 255, 80), 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        searchPanel.setOpaque(false);
+        searchPanel.add(txtSearch);
+        
+        // Right section - User info and logout
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, ModernTheme.SPACING_M, 0));
+        rightPanel.setOpaque(false);
+        
+        JLabel lblUser = new JLabel("👤 Admin");
+        lblUser.setFont(ModernTheme.FONT_BODY);
+        lblUser.setForeground(Color.WHITE);
+        
+        btnLogout = new JButton("🚪 Keluar");
+        btnLogout.setFont(ModernTheme.FONT_BUTTON);
+        btnLogout.setForeground(Color.WHITE);
+        btnLogout.setBackground(new Color(255, 255, 255, 40));
+        btnLogout.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(255, 255, 255, 80), 1),
+            BorderFactory.createEmptyBorder(8, 16, 8, 16)
+        ));
+        btnLogout.setFocusPainted(false);
+        btnLogout.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnLogout.addActionListener(e -> {
+            int confirm = JOptionPane.showConfirmDialog(
+                this,
+                "Apakah Anda yakin ingin keluar?",
+                "Konfirmasi Keluar",
+                JOptionPane.YES_NO_OPTION
+            );
+            if (confirm == JOptionPane.YES_OPTION) {
+                new login().setVisible(true);
+                dispose();
             }
         });
-
-        aset.setBackground(new java.awt.Color(255, 255, 255));
-        aset.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/CETAK.png"))); // NOI18N
-        aset.setText("Data Aset");
-        aset.setBorderPainted(false);
-        aset.setContentAreaFilled(false);
-        aset.setFocusPainted(false);
-        aset.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        aset.setMaximumSize(new java.awt.Dimension(96, 28));
-        aset.setMinimumSize(new java.awt.Dimension(96, 28));
-        aset.setOpaque(true);
-        aset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                asetActionPerformed(evt);
+        
+        // Hover effect for logout button
+        btnLogout.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                btnLogout.setBackground(new Color(255, 255, 255, 60));
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                btnLogout.setBackground(new Color(255, 255, 255, 40));
             }
         });
-
-        kategori.setBackground(new java.awt.Color(255, 255, 255));
-        kategori.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/KRITERIA.png"))); // NOI18N
-        kategori.setText("Data Kategori");
-        kategori.setBorderPainted(false);
-        kategori.setContentAreaFilled(false);
-        kategori.setFocusPainted(false);
-        kategori.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        kategori.setMaximumSize(new java.awt.Dimension(96, 28));
-        kategori.setMinimumSize(new java.awt.Dimension(96, 28));
-        kategori.setOpaque(true);
-        kategori.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kategoriActionPerformed(evt);
+        
+        rightPanel.add(lblUser);
+        rightPanel.add(btnLogout);
+        
+        topBar.add(lblTitle, BorderLayout.WEST);
+        topBar.add(searchPanel, BorderLayout.CENTER);
+        topBar.add(rightPanel, BorderLayout.EAST);
+    }
+    
+    /**
+     * Membuat sidebar dengan menu navigasi
+     */
+    private void createSidebar() {
+        sidebar = new JPanel();
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setBackground(ModernTheme.LATAR_SIDEBAR);
+        sidebar.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, getHeight()));
+        sidebar.setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, ModernTheme.BORDER));
+        
+        // Add spacing at top
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
+        
+        // Beranda menu
+        btnBeranda = createMenuButton("🏠 Beranda", true);
+        btnBeranda.addActionListener(e -> setActiveMenu(btnBeranda));
+        sidebar.add(btnBeranda);
+        
+        // DATA MASTER section
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
+        JLabel lblMaster = ModernTheme.createStyledLabel("DATA MASTER", "label");
+        lblMaster.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_M, ModernTheme.SPACING_S, 0));
+        sidebar.add(lblMaster);
+        
+        btnMember = createMenuButton("👥 Data Member", false);
+        btnMember.addActionListener(e -> memberActionPerformed(null));
+        sidebar.add(btnMember);
+        
+        btnAset = createMenuButton("📦 Data Aset", false);
+        btnAset.addActionListener(e -> asetActionPerformed(null));
+        sidebar.add(btnAset);
+        
+        btnKategori = createMenuButton("🏷️ Data Kategori", false);
+        btnKategori.addActionListener(e -> kategoriActionPerformed(null));
+        sidebar.add(btnKategori);
+        
+        btnLokasi = createMenuButton("📍 Data Lokasi", false);
+        btnLokasi.addActionListener(e -> lokasiActionPerformed(null));
+        sidebar.add(btnLokasi);
+        
+        // TRANSAKSI section
+        sidebar.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
+        JLabel lblTransaksi = ModernTheme.createStyledLabel("TRANSAKSI", "label");
+        lblTransaksi.setBorder(BorderFactory.createEmptyBorder(0, ModernTheme.SPACING_M, ModernTheme.SPACING_S, 0));
+        sidebar.add(lblTransaksi);
+        
+        btnPeminjaman = createMenuButton("🔄 Peminjaman Aset", false);
+        btnPeminjaman.addActionListener(e -> peminjamanActionPerformed(null));
+        sidebar.add(btnPeminjaman);
+        
+        btnMutasi = createMenuButton("↔️ Mutasi Aset", false);
+        btnMutasi.addActionListener(e -> mutasiActionPerformed(null));
+        sidebar.add(btnMutasi);
+        
+        // Push remaining space to bottom
+        sidebar.add(Box.createVerticalGlue());
+    }
+    
+    /**
+     * Membuat button menu untuk sidebar
+     */
+    private JButton createMenuButton(String text, boolean isActive) {
+        JButton button = new JButton(text);
+        button.setFont(ModernTheme.FONT_BODY);
+        button.setHorizontalAlignment(SwingConstants.LEFT);
+        button.setMaximumSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 48));
+        button.setPreferredSize(new Dimension(ModernTheme.SIDEBAR_WIDTH, 48));
+        button.setBorder(BorderFactory.createEmptyBorder(12, ModernTheme.SPACING_M, 12, ModernTheme.SPACING_M));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setContentAreaFilled(false);
+        button.setOpaque(true);
+        
+        if (isActive) {
+            button.setBackground(new Color(227, 242, 253)); // #E3F2FD
+            button.setForeground(ModernTheme.BIRU_UTAMA);
+            button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createMatteBorder(0, 4, 0, 0, ModernTheme.BIRU_UTAMA),
+                BorderFactory.createEmptyBorder(12, 12, 12, ModernTheme.SPACING_M)
+            ));
+        } else {
+            button.setBackground(ModernTheme.LATAR_SIDEBAR);
+            button.setForeground(new Color(97, 97, 97)); // #616161
+        }
+        
+        // Hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                if (!isMenuActive(button)) {
+                    button.setBackground(new Color(238, 238, 238)); // #EEEEEE
+                }
+            }
+            
+            @Override
+            public void mouseExited(MouseEvent e) {
+                if (!isMenuActive(button)) {
+                    button.setBackground(ModernTheme.LATAR_SIDEBAR);
+                }
             }
         });
-
-        lokasi.setBackground(new java.awt.Color(255, 255, 255));
-        lokasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/CETAK.png"))); // NOI18N
-        lokasi.setText("Data Lokasi");
-        lokasi.setBorderPainted(false);
-        lokasi.setContentAreaFilled(false);
-        lokasi.setFocusPainted(false);
-        lokasi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lokasi.setMaximumSize(new java.awt.Dimension(96, 28));
-        lokasi.setMinimumSize(new java.awt.Dimension(96, 28));
-        lokasi.setOpaque(true);
-        lokasi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                lokasiActionPerformed(evt);
+        
+        return button;
+    }
+    
+    /**
+     * Set menu sebagai active dan reset yang lain
+     */
+    private void setActiveMenu(JButton activeButton) {
+        JButton[] allButtons = {btnBeranda, btnMember, btnAset, btnKategori, btnLokasi, btnPeminjaman, btnMutasi};
+        
+        for (JButton btn : allButtons) {
+            if (btn == activeButton) {
+                btn.setBackground(new Color(227, 242, 253)); // #E3F2FD
+                btn.setForeground(ModernTheme.BIRU_UTAMA);
+                btn.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createMatteBorder(0, 4, 0, 0, ModernTheme.BIRU_UTAMA),
+                    BorderFactory.createEmptyBorder(12, 12, 12, ModernTheme.SPACING_M)
+                ));
+            } else {
+                btn.setBackground(ModernTheme.LATAR_SIDEBAR);
+                btn.setForeground(new Color(97, 97, 97));
+                btn.setBorder(BorderFactory.createEmptyBorder(12, ModernTheme.SPACING_M, 12, ModernTheme.SPACING_M));
             }
-        });
-
-        jLabel3.setFont(new java.awt.Font("Times New Roman", 1, 12)); // NOI18N
-        jLabel3.setText("Form Data Transaksi");
-
-        peminjaman.setBackground(new java.awt.Color(255, 255, 255));
-        peminjaman.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/PENILAIAN.png"))); // NOI18N
-        peminjaman.setText("Peminjaman Aset");
-        peminjaman.setBorderPainted(false);
-        peminjaman.setContentAreaFilled(false);
-        peminjaman.setFocusPainted(false);
-        peminjaman.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        peminjaman.setMaximumSize(new java.awt.Dimension(96, 28));
-        peminjaman.setMinimumSize(new java.awt.Dimension(96, 28));
-        peminjaman.setOpaque(true);
-        peminjaman.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                peminjamanActionPerformed(evt);
-            }
-        });
-
-        mutasi.setBackground(new java.awt.Color(255, 255, 255));
-        mutasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/EDIT.png"))); // NOI18N
-        mutasi.setText("Mutasi Aset");
-        mutasi.setBorderPainted(false);
-        mutasi.setContentAreaFilled(false);
-        mutasi.setFocusPainted(false);
-        mutasi.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        mutasi.setMaximumSize(new java.awt.Dimension(96, 28));
-        mutasi.setMinimumSize(new java.awt.Dimension(96, 28));
-        mutasi.setOpaque(true);
-        mutasi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mutasiActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(mutasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(lokasi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(peminjaman, javax.swing.GroupLayout.PREFERRED_SIZE, 184, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel3))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(kategori, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(aset, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(member, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(member, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(aset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(kategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lokasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(peminjaman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(mutasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(38, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(27, 27, 27)
-                        .addComponent(jLabel1)
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel5)
-                                .addGap(172, 172, 172))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel6)
-                                .addGap(37, 37, 37))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(238, 238, 238))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addComponent(tanggal)
-                                .addContainerGap())))))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(43, 43, 43)
-                        .addComponent(jLabel7)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jLabel6)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel5))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(tanggal))))
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(300, 300, 300))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1133, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 415, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void kategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kategoriActionPerformed
-    new kategori().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_kategoriActionPerformed
-
-    private void lokasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lokasiActionPerformed
-    new lokasi().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_lokasiActionPerformed
-
-    private void mutasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mutasiActionPerformed
-    new mutasi().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_mutasiActionPerformed
-
-    private void peminjamanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_peminjamanActionPerformed
-    new peminjaman().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_peminjamanActionPerformed
-
-    private void memberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_memberActionPerformed
-    new member().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_memberActionPerformed
-
-    private void asetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_asetActionPerformed
-    new aset().setVisible(true);
-    this.dispose();
-    }//GEN-LAST:event_asetActionPerformed
+        }
+    }
+    
+    /**
+     * Check apakah menu sedang active
+     */
+    private boolean isMenuActive(JButton button) {
+        return button.getBackground().equals(new Color(227, 242, 253));
+    }
+    
+    /**
+     * Membuat content area dengan welcome card dan statistics
+     */
+    private void createContentArea() {
+        contentArea = new JPanel();
+        contentArea.setLayout(new BorderLayout());
+        contentArea.setBackground(ModernTheme.LATAR_UTAMA);
+        contentArea.setBorder(BorderFactory.createEmptyBorder(ModernTheme.SPACING_L, ModernTheme.SPACING_L, ModernTheme.SPACING_L, ModernTheme.SPACING_L));
+        
+        // Main content panel with vertical layout
+        JPanel mainContent = new JPanel();
+        mainContent.setLayout(new BoxLayout(mainContent, BoxLayout.Y_AXIS));
+        mainContent.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Welcome card
+        JPanel welcomeCard = createWelcomeCard();
+        mainContent.add(welcomeCard);
+        mainContent.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
+        
+        // Statistics cards
+        JPanel statsPanel = createStatisticsPanel();
+        mainContent.add(statsPanel);
+        mainContent.add(Box.createVerticalStrut(ModernTheme.SPACING_L));
+        
+        // Activity feed
+        JPanel activityCard = createActivityCard();
+        mainContent.add(activityCard);
+        
+        contentArea.add(mainContent, BorderLayout.NORTH);
+    }
+    
+    /**
+     * Membuat welcome card
+     */
+    private JPanel createWelcomeCard() {
+        JPanel card = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(card);
+        card.setLayout(new BorderLayout());
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 150));
+        
+        // Left section - Welcome text
+        JPanel leftPanel = new JPanel();
+        leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
+        leftPanel.setOpaque(false);
+        
+        JLabel lblWelcome = ModernTheme.createStyledLabel("Halo, Selamat Datang!", "h1");
+        JLabel lblSubtitle = ModernTheme.createStyledLabel("Sistem Inventaris Aset SMA Negeri 62 Jakarta", "body");
+        JLabel lblDescription = ModernTheme.createStyledLabel("Aplikasi Berbasis Desktop", "caption");
+        
+        leftPanel.add(lblWelcome);
+        leftPanel.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
+        leftPanel.add(lblSubtitle);
+        leftPanel.add(Box.createVerticalStrut(ModernTheme.SPACING_XS));
+        leftPanel.add(lblDescription);
+        
+        // Right section - Date
+        lblTanggal = ModernTheme.createStyledLabel("", "body");
+        lblTanggal.setForeground(ModernTheme.TEKS_SEKUNDER);
+        
+        card.add(leftPanel, BorderLayout.WEST);
+        card.add(lblTanggal, BorderLayout.EAST);
+        
+        return card;
+    }
+    
+    /**
+     * Membuat panel statistics cards
+     */
+    private JPanel createStatisticsPanel() {
+        JPanel panel = new JPanel(new GridLayout(1, 3, ModernTheme.SPACING_M, 0));
+        panel.setOpaque(false);
+        panel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
+        
+        // Total Aset card
+        JPanel asetCard = createStatCard("📦", "Total Aset", "125", ModernTheme.BIRU_UTAMA);
+        panel.add(asetCard);
+        
+        // Total Member card
+        JPanel memberCard = createStatCard("👥", "Total Member", "45", ModernTheme.HIJAU_SEKUNDER);
+        panel.add(memberCard);
+        
+        // Peminjaman Aktif card
+        JPanel peminjamanCard = createStatCard("🔄", "Peminjaman Aktif", "23", ModernTheme.PERINGATAN);
+        panel.add(peminjamanCard);
+        
+        return panel;
+    }
+    
+    /**
+     * Membuat single statistics card
+     */
+    private JPanel createStatCard(String icon, String label, String value, Color accentColor) {
+        JPanel card = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(card);
+        card.setLayout(new BorderLayout());
+        
+        // Icon
+        JLabel lblIcon = new JLabel(icon);
+        lblIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 32));
+        lblIcon.setForeground(accentColor);
+        
+        // Value and label
+        JPanel textPanel = new JPanel();
+        textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+        textPanel.setOpaque(false);
+        
+        JLabel lblValue = new JLabel(value);
+        lblValue.setFont(new Font("Segoe UI", Font.BOLD, 36));
+        lblValue.setForeground(ModernTheme.TEKS_UTAMA);
+        
+        JLabel lblLabel = ModernTheme.createStyledLabel(label, "body");
+        lblLabel.setForeground(ModernTheme.TEKS_SEKUNDER);
+        
+        textPanel.add(lblValue);
+        textPanel.add(lblLabel);
+        
+        card.add(lblIcon, BorderLayout.WEST);
+        card.add(textPanel, BorderLayout.CENTER);
+        
+        return card;
+    }
+    
+    /**
+     * Membuat activity feed card
+     */
+    private JPanel createActivityCard() {
+        JPanel card = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(card);
+        card.setLayout(new BorderLayout());
+        card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 200));
+        
+        JLabel lblTitle = ModernTheme.createStyledLabel("📋 Aktivitas Terbaru", "h3");
+        
+        JPanel activityList = new JPanel();
+        activityList.setLayout(new BoxLayout(activityList, BoxLayout.Y_AXIS));
+        activityList.setOpaque(false);
+        
+        activityList.add(createActivityItem("• Peminjaman Laptop - 2 jam lalu"));
+        activityList.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
+        activityList.add(createActivityItem("• Mutasi Proyektor - 5 jam lalu"));
+        activityList.add(Box.createVerticalStrut(ModernTheme.SPACING_S));
+        activityList.add(createActivityItem("• Tambah Aset Baru - 1 hari lalu"));
+        
+        card.add(lblTitle, BorderLayout.NORTH);
+        card.add(Box.createVerticalStrut(ModernTheme.SPACING_M), BorderLayout.CENTER);
+        card.add(activityList, BorderLayout.SOUTH);
+        
+        return card;
+    }
+    
+    /**
+     * Membuat single activity item
+     */
+    private JLabel createActivityItem(String text) {
+        JLabel label = ModernTheme.createStyledLabel(text, "body");
+        label.setForeground(ModernTheme.TEKS_SEKUNDER);
+        return label;
+    }
+    
+    /**
+     * Menampilkan tanggal dengan format Indonesia dan auto-update setiap menit
+     */
+    private void tampilkanTanggal() {
+        Timer timer = new Timer(60000, e -> updateTanggal());
+        timer.start();
+        updateTanggal();
+    }
+    
+    /**
+     * Update label tanggal
+     */
+    private void updateTanggal() {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, dd MMMM yyyy");
+        String tgl = sdf.format(new Date());
+        lblTanggal.setText(tgl);
+    }
+    
+    // ===== EVENT HANDLERS (PRESERVED FROM ORIGINAL) =====
+    
+    private void memberActionPerformed(java.awt.event.ActionEvent evt) {
+        new member().setVisible(true);
+        this.dispose();
+    }
+    
+    private void asetActionPerformed(java.awt.event.ActionEvent evt) {
+        new aset().setVisible(true);
+        this.dispose();
+    }
+    
+    private void kategoriActionPerformed(java.awt.event.ActionEvent evt) {
+        new kategori().setVisible(true);
+        this.dispose();
+    }
+    
+    private void lokasiActionPerformed(java.awt.event.ActionEvent evt) {
+        new lokasi().setVisible(true);
+        this.dispose();
+    }
+    
+    private void peminjamanActionPerformed(java.awt.event.ActionEvent evt) {
+        new peminjaman().setVisible(true);
+        this.dispose();
+    }
+    
+    private void mutasiActionPerformed(java.awt.event.ActionEvent evt) {
+        new mutasi().setVisible(true);
+        this.dispose();
+    }
+    
+    /**
+     * Main method untuk testing
+     */
     public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new branda().setVisible(true);
-            }
+        java.awt.EventQueue.invokeLater(() -> {
+            new branda().setVisible(true);
         });
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton aset;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JButton kategori;
-    private javax.swing.JButton lokasi;
-    private javax.swing.JButton member;
-    private javax.swing.JButton mutasi;
-    private javax.swing.JButton peminjaman;
-    private javax.swing.JLabel tanggal;
-    // End of variables declaration//GEN-END:variables
 }

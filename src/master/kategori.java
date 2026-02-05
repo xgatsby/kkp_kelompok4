@@ -1,624 +1,699 @@
 package master;
+
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import ui.ModernTheme;
+import koneksi.koneksi;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class kategori extends javax.swing.JFrame {
-
+/**
+ * Form Data Kategori - Modernized Version
+ * Sistem Inventaris Aset SMA Negeri 62 Jakarta
+ * 
+ * @author Sistem Inventaris Aset
+ * @version 2.0 (Modernized with ModernTheme - Phase 4)
+ */
+public class kategori extends JFrame {
+    
+    // Components
+    private JTextField txtIDKategori;
+    private JTextField txtNamaKategori;
+    private JTextArea txtKeterangan;
+    private JTextField txtSearch;
+    private JButton btnSimpan;
+    private JButton btnUbah;
+    private JButton btnHapus;
+    private JButton btnBersihkan;
+    private JButton btnCari;
+    private JButton btnCetak;
+    private JTable tableKategori;
+    private DefaultTableModel tableModel;
+    private JScrollPane scrollPane;
+    
+    // Database connection
+    private Connection conn;
+    
+    /**
+     * Constructor - Initialize form and apply modern theme
+     */
     public kategori() {
+        ModernTheme.applyTheme();
         initComponents();
-        tampilkanTanggal();
+        setLocationRelativeTo(null);
         tampilData();
+        generateNextID();
     }
     
-    private void tampilkanTanggal() {
-        javax.swing.Timer timer = new javax.swing.Timer(60000, (e) -> {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-            String tgl = sdf.format(new java.util.Date());
-            tanggal.setText(tgl);
-        });
-        timer.start();
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-        String tgl = sdf.format(new java.util.Date());
-        tanggal.setText(tgl);
-    }
-    
-    private void tampilData() {
-    DefaultTableModel model = new DefaultTableModel();
-    model.addColumn("ID Kategotri");
-    model.addColumn("Nama Kategotri");
-    model.addColumn("Keterangan");
-
-    try {
-        String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-        String user = "inventaris";
-        String pass = "inventaris123";
-        Connection conn = DriverManager.getConnection(url, user, pass);
-
-        String sql = "SELECT * FROM kategori";
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getString("id_kategori"),
-                rs.getString("nama_kategori"),
-                rs.getString("keterangan")
-            });
-        }
-
-        tabelkategori.setModel(model);
-
-        conn.close();
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal load data: " + e.getMessage());
-}}
-
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    /**
+     * Initialize all components with modern styling
+     */
     private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        tanggal = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        mutasi = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        idkategori = new javax.swing.JTextField();
-        namakategori = new javax.swing.JTextField();
-        keterangan = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabelkategori = new javax.swing.JTable();
-        simpan = new javax.swing.JButton();
-        ubah = new javax.swing.JButton();
-        hapus = new javax.swing.JButton();
-        bersikan1 = new javax.swing.JButton();
-        cariteks = new javax.swing.JTextField();
-        cari = new javax.swing.JButton();
-        laporan = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setMaximumSize(new java.awt.Dimension(1315, 700));
-        jPanel1.setMinimumSize(new java.awt.Dimension(1315, 700));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setText("Halo, Selamat Datang !");
-
-        tanggal.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        tanggal.setText("Tanggal Hari ini");
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel7.setText("Form Data Kategori");
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel8.setText("______________________________________");
-
-        mutasi.setBackground(new java.awt.Color(255, 255, 255));
-        mutasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/BRANDA.png"))); // NOI18N
-        mutasi.setText("Branda");
-        mutasi.setBorderPainted(false);
-        mutasi.setContentAreaFilled(false);
-        mutasi.setFocusPainted(false);
-        mutasi.setMaximumSize(new java.awt.Dimension(96, 28));
-        mutasi.setMinimumSize(new java.awt.Dimension(96, 28));
-        mutasi.setOpaque(true);
-        mutasi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mutasiActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel9.setText("Nama Kategori");
-
-        jLabel10.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel10.setText("Keterangan");
-
-        jLabel11.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel11.setText("ID Kategori");
-
-        idkategori.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idkategoriActionPerformed(evt);
-            }
-        });
-
-        namakategori.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                namakategoriActionPerformed(evt);
-            }
-        });
-
-        keterangan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                keteranganActionPerformed(evt);
-            }
-        });
-
-        tabelkategori.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+        // Frame setup
+        setTitle("Form Data Kategori - Sistem Inventaris Aset");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(1200, 700);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Create main panel
+        JPanel mainPanel = new JPanel(new BorderLayout(0, ModernTheme.SPACING_M));
+        mainPanel.setBackground(ModernTheme.LATAR_UTAMA);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+            ModernTheme.SPACING_L, ModernTheme.SPACING_L, 
+            ModernTheme.SPACING_L, ModernTheme.SPACING_L
         ));
-        tabelkategori.setGridColor(new java.awt.Color(204, 204, 204));
-        tabelkategori.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelkategoriMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(tabelkategori);
-
-        simpan.setBackground(new java.awt.Color(204, 204, 204));
-        simpan.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        simpan.setText("SIMPAN");
-        simpan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simpanActionPerformed(evt);
-            }
-        });
-
-        ubah.setBackground(new java.awt.Color(204, 204, 204));
-        ubah.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        ubah.setText("UBAH");
-        ubah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ubahActionPerformed(evt);
-            }
-        });
-
-        hapus.setBackground(new java.awt.Color(204, 204, 204));
-        hapus.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        hapus.setText("HAPUS");
-        hapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hapusActionPerformed(evt);
-            }
-        });
-
-        bersikan1.setBackground(new java.awt.Color(204, 204, 204));
-        bersikan1.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        bersikan1.setText("BERSIKAN");
-        bersikan1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bersikan1ActionPerformed(evt);
-            }
-        });
-
-        cari.setBackground(new java.awt.Color(255, 255, 255));
-        cari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/CARI.png"))); // NOI18N
-        cari.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cariActionPerformed(evt);
-            }
-        });
-
-        laporan.setBackground(new java.awt.Color(255, 255, 255));
-        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LAPORAN.png"))); // NOI18N
-        laporan.setBorderPainted(false);
-        laporan.setContentAreaFilled(false);
-        laporan.setFocusPainted(false);
-        laporan.setOpaque(true);
-        laporan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                laporanActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(230, 230, 230)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, 740, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(laporan, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addComponent(simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(60, 60, 60)
-                                    .addComponent(ubah, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                                    .addComponent(hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(76, 76, 76)
-                                    .addComponent(bersikan1))
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(jPanel3Layout.createSequentialGroup()
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(jLabel11)
-                                        .addComponent(jLabel9))
-                                    .addGap(47, 47, 47)
-                                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(namakategori, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                                        .addComponent(idkategori))
-                                    .addGap(56, 56, 56)
-                                    .addComponent(jLabel10)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(keterangan, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(58, 58, 58)))
-                .addGap(0, 163, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cariteks, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cari)
-                        .addGap(64, 64, 64)
-                        .addComponent(mutasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(tanggal)))
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(435, 435, 435)
-                .addComponent(jLabel7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(mutasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cariteks, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1)
-                    .addComponent(cari))
-                .addGap(10, 10, 10)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(idkategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(keterangan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(namakategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(laporan)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(simpan)
-                    .addComponent(ubah)
-                    .addComponent(hapus)
-                    .addComponent(bersikan1))
-                .addGap(21, 21, 21)
-                .addComponent(tanggal)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(24, 24, 24)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 1184, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void mutasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mutasiActionPerformed
-        new branda().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_mutasiActionPerformed
-
-    private void idkategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idkategoriActionPerformed
-
-    }//GEN-LAST:event_idkategoriActionPerformed
-
-    private void namakategoriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namakategoriActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_namakategoriActionPerformed
-
-    private void keteranganActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_keteranganActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_keteranganActionPerformed
-
-    private void tabelkategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelkategoriMouseClicked
-        int baris = tabelkategori.rowAtPoint(evt.getPoint());
-
-        String ID = tabelkategori.getValueAt(baris, 0).toString();
-        String Nama = tabelkategori.getValueAt(baris, 1).toString();
-        String Keterangan = tabelkategori.getValueAt(baris, 2).toString();
-
-        idkategori.setText(ID);
-        namakategori.setText(Nama);
-        keterangan.setText(Keterangan);
-    }//GEN-LAST:event_tabelkategoriMouseClicked
-
-    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-        String ID = idkategori.getText();
-        String Nama = namakategori.getText();
-        String Keterangan = keterangan.getText();
-
-        if (ID.isEmpty() || Nama.isEmpty() || Keterangan.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi.");
-            return;
-        }
-
-        try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-
-            Connection conn = DriverManager.getConnection(url, user, pass);
-
-            String sql = "INSERT INTO kategori (id_kategori, nama_kategori, keterangan) VALUES (?, ?, ?)";
-            PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setString(1, ID);
-            pst.setString(2, Nama);
-            pst.setString(3, Keterangan);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
-
-            idkategori.setText("");
-            namakategori.setText("");
-            keterangan.setText("");
-
-            conn.close();
-            tampilData();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Data gagal disimpan : " + e.getMessage());
-        }
-    }//GEN-LAST:event_simpanActionPerformed
-
-    private void ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahActionPerformed
-        String ID = idkategori.getText();
-        String Nama = namakategori.getText();
-        String Keterangan = keterangan.getText();
-
-        if (ID.isEmpty() || Nama.isEmpty() || Keterangan.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi.");
-            return;
-        }
-
-        try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-            Connection conn = DriverManager.getConnection(url, user, pass);
-
-            String sql = "UPDATE kategori SET nama_kategori=?, keterangan=? WHERE id_kategori=?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, Nama);
-            pst.setString(2, Keterangan);
-            pst.setString(3, ID);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Data berhasil diubah!");
-
-            conn.close();
-            tampilData();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal mengubah data: " + e.getMessage());
-        }
-    }//GEN-LAST:event_ubahActionPerformed
-
-    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
-        int baris = tabelkategori.getSelectedRow();
-
-        if (baris == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus dulu.");
-            return;
-        }
-
-        String id = tabelkategori.getValueAt(baris, 0).toString();
-
-        int konfirmasi = JOptionPane.showConfirmDialog(
-            this,
-            "Yakin mau hapus data dengan ID " + id + "?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION
-        );
-
-        if (konfirmasi == JOptionPane.YES_OPTION) {
-            try {
-                String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-                String user = "inventaris";
-                String pass = "inventaris123";
-
-                Connection conn = DriverManager.getConnection(url, user, pass);
-
-                String sql = "DELETE FROM kategori WHERE id_kategori = ?";
-                PreparedStatement pst = conn.prepareStatement(sql);
-                pst.setString(1, id);
-
-                int affected = pst.executeUpdate();
-                if (affected > 0) {
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Data tidak ditemukan / gagal dihapus!");
+        
+        // Create title panel
+        JPanel titlePanel = createTitlePanel();
+        
+        // Create input card
+        JPanel inputCard = createInputCard();
+        
+        // Create button panel
+        JPanel buttonPanel = createButtonPanel();
+        
+        // Create table panel
+        JPanel tablePanel = createTablePanel();
+        
+        // Assemble layout
+        JPanel topPanel = new JPanel(new BorderLayout(0, ModernTheme.SPACING_M));
+        topPanel.setBackground(ModernTheme.LATAR_UTAMA);
+        topPanel.add(titlePanel, BorderLayout.NORTH);
+        topPanel.add(inputCard, BorderLayout.CENTER);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(tablePanel, BorderLayout.CENTER);
+        
+        add(mainPanel);
+    }
+    
+    /**
+     * Create title panel with form heading
+     */
+    private JPanel createTitlePanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        JLabel lblTitle = ModernTheme.createStyledLabel("FORM DATA KATEGORI", "h2");
+        panel.add(lblTitle, BorderLayout.WEST);
+        
+        return panel;
+    }
+    
+    /**
+     * Create input card with form fields
+     */
+    private JPanel createInputCard() {
+        JPanel card = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(card);
+        card.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(ModernTheme.SPACING_S, ModernTheme.SPACING_S, 
+                                ModernTheme.SPACING_S, ModernTheme.SPACING_S);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+        // Row 0: ID Kategori
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0;
+        JLabel lblID = ModernTheme.createStyledLabel("ID Kategori", "label");
+        card.add(lblID, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        txtIDKategori = ModernTheme.createStyledTextField();
+        txtIDKategori.setEnabled(false);
+        txtIDKategori.setToolTipText("ID Kategori (Auto-generated)");
+        card.add(txtIDKategori, gbc);
+        
+        // Row 1: Nama Kategori
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
+        JLabel lblNama = ModernTheme.createStyledLabel("Nama Kategori *", "label");
+        card.add(lblNama, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        txtNamaKategori = ModernTheme.createStyledTextField();
+        txtNamaKategori.setToolTipText("Nama kategori (minimal 3 karakter)");
+        card.add(txtNamaKategori, gbc);
+        
+        // Row 2: Keterangan
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        gbc.anchor = GridBagConstraints.NORTHWEST;
+        JLabel lblKeterangan = ModernTheme.createStyledLabel("Keterangan", "label");
+        card.add(lblKeterangan, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        txtKeterangan = new JTextArea(3, 20);
+        txtKeterangan.setFont(ModernTheme.FONT_BODY);
+        txtKeterangan.setLineWrap(true);
+        txtKeterangan.setWrapStyleWord(true);
+        txtKeterangan.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(ModernTheme.BORDER, 1),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
+        txtKeterangan.setToolTipText("Keterangan kategori (opsional)");
+        JScrollPane scrollKeterangan = new JScrollPane(txtKeterangan);
+        scrollKeterangan.setPreferredSize(new Dimension(0, 80));
+        card.add(scrollKeterangan, gbc);
+        
+        return card;
+    }
+    
+    /**
+     * Create button panel with action buttons
+     */
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel(new BorderLayout(ModernTheme.SPACING_M, 0));
+        panel.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Left side: CRUD buttons
+        JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, ModernTheme.SPACING_S, 0));
+        leftButtons.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Back button
+        JButton btnKembali = ModernTheme.createStyledButton("← KEMBALI", "secondary");
+        btnKembali.addActionListener(e -> this.dispose());
+        btnKembali.setToolTipText("Kembali ke Dashboard");
+        
+        btnSimpan = ModernTheme.createStyledButton("💾 SIMPAN", "success");
+        btnUbah = ModernTheme.createStyledButton("✏️ UBAH", "primary");
+        btnHapus = ModernTheme.createStyledButton("🗑️ HAPUS", "danger");
+        btnBersihkan = ModernTheme.createStyledButton("🧹 BERSIHKAN", "secondary");
+        
+        btnSimpan.addActionListener(e -> simpanActionPerformed());
+        btnUbah.addActionListener(e -> ubahActionPerformed());
+        btnHapus.addActionListener(e -> hapusActionPerformed());
+        btnBersihkan.addActionListener(e -> bersihkanActionPerformed());
+        
+        leftButtons.add(btnKembali);
+        leftButtons.add(btnSimpan);
+        leftButtons.add(btnUbah);
+        leftButtons.add(btnHapus);
+        leftButtons.add(btnBersihkan);
+        
+        // Right side: Search and Print
+        JPanel rightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, ModernTheme.SPACING_S, 0));
+        rightButtons.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        txtSearch = ModernTheme.createStyledTextField();
+        txtSearch.setPreferredSize(new Dimension(250, 36));
+        txtSearch.setToolTipText("Ketik kata kunci dan tekan Enter untuk mencari");
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    cariActionPerformed();
                 }
-
-                tampilData();
-
-                conn.close();
-
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Data gagal dihapus: " + e.getMessage());
             }
-        }
-    }//GEN-LAST:event_hapusActionPerformed
-
-    private void bersikan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bersikan1ActionPerformed
-        cariteks.setText("");
-        idkategori.setText("");
-        namakategori.setText("");
-        keterangan.setText("");
-    }//GEN-LAST:event_bersikan1ActionPerformed
-
-    private void cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariActionPerformed
-        String key = cariteks.getText().trim();
-
-        if (key.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Masukkan kata kunci pencarian!");
-            return;
-        }
-
+        });
+        
+        btnCari = ModernTheme.createStyledButton("🔍 CARI", "primary");
+        btnCari.addActionListener(e -> cariActionPerformed());
+        
+        btnCetak = ModernTheme.createStyledButton("🖨️ CETAK LAPORAN", "primary");
+        btnCetak.addActionListener(e -> cetakActionPerformed());
+        
+        rightButtons.add(txtSearch);
+        rightButtons.add(btnCari);
+        rightButtons.add(btnCetak);
+        
+        panel.add(leftButtons, BorderLayout.WEST);
+        panel.add(rightButtons, BorderLayout.EAST);
+        
+        return panel;
+    }
+    
+    /**
+     * Create table panel with data display
+     */
+    private JPanel createTablePanel() {
+        JPanel panel = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(panel);
+        panel.setLayout(new BorderLayout());
+        
+        // Create table model
+        String[] columns = {"ID Kategori", "Nama Kategori", "Keterangan"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        // Create table
+        tableKategori = ModernTheme.createStyledTable(tableModel);
+        tableKategori.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int row = tableKategori.getSelectedRow();
+                    if (row != -1) {
+                        txtIDKategori.setText(tableKategori.getValueAt(row, 0).toString());
+                        txtNamaKategori.setText(tableKategori.getValueAt(row, 1).toString());
+                        Object keterangan = tableKategori.getValueAt(row, 2);
+                        txtKeterangan.setText(keterangan != null ? keterangan.toString() : "");
+                    }
+                }
+            }
+        });
+        
+        scrollPane = new JScrollPane(tableKategori);
+        scrollPane.setBorder(BorderFactory.createLineBorder(ModernTheme.BORDER, 1));
+        
+        panel.add(scrollPane, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    // ==================== DATABASE METHODS ====================
+    
+    /**
+     * Generate next ID Kategori automatically
+     */
+    private void generateNextID() {
         try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            String sql = "SELECT * FROM kategori WHERE id_kategori LIKE ? OR nama_kategori LIKE ?OR keterangan LIKE ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, "%" + key + "%");
-            pst.setString(2, "%" + key + "%");
-            pst.setString(3, "%" + key + "%");
-
-            ResultSet rs = pst.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) tabelkategori.getModel();
-            model.setRowCount(0);
-
+            conn = koneksi.getConnection();
+            String sql = "SELECT id_kategori FROM kategori ORDER BY id_kategori DESC LIMIT 1";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            if (rs.next()) {
+                String lastID = rs.getString("id_kategori");
+                String numPart = lastID.substring(3); // Remove "KAT"
+                int nextNum = Integer.parseInt(numPart) + 1;
+                String nextID = String.format("KAT%03d", nextNum);
+                txtIDKategori.setText(nextID);
+            } else {
+                txtIDKategori.setText("KAT001");
+            }
+            
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            txtIDKategori.setText("KAT001");
+        }
+    }
+    
+    /**
+     * Display all kategori data in table
+     */
+    private void tampilData() {
+        try {
+            conn = koneksi.getConnection();
+            tableModel.setRowCount(0);
+            
+            String sql = "SELECT * FROM kategori ORDER BY id_kategori";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
             while (rs.next()) {
                 Object[] row = {
                     rs.getString("id_kategori"),
                     rs.getString("nama_kategori"),
                     rs.getString("keterangan")
                 };
-                model.addRow(row);
+                tableModel.addRow(row);
             }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Pencarian gagal: " + e.getMessage());
-        }
-    }//GEN-LAST:event_cariActionPerformed
-
-    private void laporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_laporanActionPerformed
-        Connection conn = null;
-        try {
-            conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/inventaris_aset",
-                "inventaris", "inventaris123"
-            );
             
-            // Try to load .jasper file first
-            InputStream report = getClass().getResourceAsStream("/laporan/LaporanDataKategori.jasper");
-            
-            // If .jasper doesn't exist, compile from .jrxml
-            if (report == null) {
-                InputStream jrxmlStream = getClass().getResourceAsStream("/laporan/LaporanDataKategori.jrxml");
-                if (jrxmlStream == null) {
-                    JOptionPane.showMessageDialog(null, "File laporan (.jrxml) tidak ditemukan");
-                    return;
-                }
-                // Compile .jrxml to .jasper in memory
-                net.sf.jasperreports.engine.JasperReport jasperReport = 
-                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
-                JasperPrint print = JasperFillManager.fillReport(jasperReport, new HashMap<>(), conn);
-                JasperViewer viewer = new JasperViewer(print, false);
-                viewer.setTitle("Laporan Data Kategori");
-                viewer.setVisible(true);
-            } else {
-                // Use pre-compiled .jasper file
-                JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
-                JasperViewer viewer = new JasperViewer(print, false);
-                viewer.setTitle("Laporan Data Kategori");
-                viewer.setVisible(true);
-            }
+            rs.close();
+            st.close();
         } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Gagal mencetak laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this,
+                "Gagal menampilkan data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_laporanActionPerformed
-
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new kategori().setVisible(true);
+    }
+    
+    /**
+     * Clear all input fields
+     */
+    private void kosongkanForm() {
+        txtNamaKategori.setText("");
+        txtKeterangan.setText("");
+        generateNextID();
+        txtNamaKategori.requestFocus();
+    }
+    
+    /**
+     * Validate input data
+     */
+    private boolean validateInput() {
+        String id = txtIDKategori.getText().trim();
+        String nama = txtNamaKategori.getText().trim();
+        
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "ID Kategori tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        if (nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Nama Kategori tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtNamaKategori.requestFocus();
+            return false;
+        }
+        
+        if (nama.length() < 3) {
+            JOptionPane.showMessageDialog(this,
+                "Nama Kategori minimal 3 karakter!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtNamaKategori.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // ==================== EVENT HANDLERS ====================
+    
+    /**
+     * Save new kategori data
+     */
+    private void simpanActionPerformed() {
+        if (!validateInput()) {
+            return;
+        }
+        
+        String id = txtIDKategori.getText().trim();
+        String nama = txtNamaKategori.getText().trim();
+        String keterangan = txtKeterangan.getText().trim();
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Simpan data kategori berikut?\n\n" +
+            "ID Kategori: " + id + "\n" +
+            "Nama: " + nama + "\n" +
+            "Keterangan: " + (keterangan.isEmpty() ? "-" : keterangan),
+            "Konfirmasi Simpan",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            
+            // Check if ID already exists
+            String checkSql = "SELECT id_kategori FROM kategori WHERE id_kategori = ?";
+            PreparedStatement checkPs = conn.prepareStatement(checkSql);
+            checkPs.setString(1, id);
+            ResultSet rs = checkPs.executeQuery();
+            
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this,
+                    "ID Kategori sudah ada! Gunakan ID yang berbeda.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                rs.close();
+                checkPs.close();
+                return;
             }
+            rs.close();
+            checkPs.close();
+            
+            // Insert new data
+            String sql = "INSERT INTO kategori (id_kategori, nama_kategori, keterangan) VALUES (?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.setString(2, nama);
+            ps.setString(3, keterangan.isEmpty() ? null : keterangan);
+            
+            ps.executeUpdate();
+            ps.close();
+            
+            JOptionPane.showMessageDialog(this,
+                "✓ Data kategori berhasil disimpan!",
+                "Sukses",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            kosongkanForm();
+            tampilData();
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal menyimpan data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Update existing kategori data
+     */
+    private void ubahActionPerformed() {
+        if (!validateInput()) {
+            return;
+        }
+        
+        String id = txtIDKategori.getText().trim();
+        String nama = txtNamaKategori.getText().trim();
+        String keterangan = txtKeterangan.getText().trim();
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Ubah data kategori berikut?\n\n" +
+            "ID Kategori: " + id + "\n" +
+            "Nama: " + nama + "\n" +
+            "Keterangan: " + (keterangan.isEmpty() ? "-" : keterangan),
+            "Konfirmasi Ubah",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            String sql = "UPDATE kategori SET nama_kategori = ?, keterangan = ? WHERE id_kategori = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nama);
+            ps.setString(2, keterangan.isEmpty() ? null : keterangan);
+            ps.setString(3, id);
+            
+            int result = ps.executeUpdate();
+            ps.close();
+            
+            if (result > 0) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ Data kategori berhasil diubah!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                kosongkanForm();
+                tampilData();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal mengubah data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Delete kategori data
+     */
+    private void hapusActionPerformed() {
+        String id = txtIDKategori.getText().trim();
+        
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Pilih data yang akan dihapus!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Hapus data kategori berikut?\n\n" +
+            "ID Kategori: " + id + "\n" +
+            "Nama: " + txtNamaKategori.getText() + "\n\n" +
+            "Data yang dihapus tidak dapat dikembalikan!",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            String sql = "DELETE FROM kategori WHERE id_kategori = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            
+            int result = ps.executeUpdate();
+            ps.close();
+            
+            if (result > 0) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ Data kategori berhasil dihapus!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                kosongkanForm();
+                tampilData();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal menghapus data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Clear all fields
+     */
+    private void bersihkanActionPerformed() {
+        // Check if there's data in fields
+        boolean hasData = !txtNamaKategori.getText().trim().isEmpty() || 
+                         !txtKeterangan.getText().trim().isEmpty();
+        
+        if (hasData) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Bersihkan semua field?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        
+        kosongkanForm();
+        tampilData();
+    }
+    
+    /**
+     * Search kategori data
+     */
+    private void cariActionPerformed() {
+        String keyword = txtSearch.getText().trim();
+        
+        if (keyword.isEmpty()) {
+            tampilData();
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            tableModel.setRowCount(0);
+            
+            String sql = "SELECT * FROM kategori WHERE " +
+                        "id_kategori LIKE ? OR " +
+                        "nama_kategori LIKE ? OR " +
+                        "keterangan LIKE ? " +
+                        "ORDER BY id_kategori";
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            String searchPattern = "%" + keyword + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            int count = 0;
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getString("id_kategori"),
+                    rs.getString("nama_kategori"),
+                    rs.getString("keterangan")
+                };
+                tableModel.addRow(row);
+                count++;
+            }
+            
+            rs.close();
+            ps.close();
+            
+            if (count == 0) {
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan untuk: " + keyword,
+                    "Hasil Pencarian",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal mencari data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Print kategori report
+     */
+    private void cetakActionPerformed() {
+        try {
+            conn = koneksi.getConnection();
+            
+            InputStream reportStream = getClass().getResourceAsStream("/laporan/LaporanDataKategori.jasper");
+            
+            if (reportStream == null) {
+                JOptionPane.showMessageDialog(this,
+                    "File laporan tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            HashMap<String, Object> parameters = new HashMap<>();
+            JasperPrint print = JasperFillManager.fillReport(reportStream, parameters, conn);
+            JasperViewer viewer = new JasperViewer(print, false);
+            viewer.setVisible(true);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal mencetak laporan: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Main method for testing
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new kategori().setVisible(true);
         });
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bersikan1;
-    private javax.swing.JButton cari;
-    private javax.swing.JTextField cariteks;
-    private javax.swing.JButton hapus;
-    private javax.swing.JTextField idkategori;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField keterangan;
-    private javax.swing.JButton laporan;
-    private javax.swing.JButton mutasi;
-    private javax.swing.JTextField namakategori;
-    private javax.swing.JButton simpan;
-    private javax.swing.JTable tabelkategori;
-    private javax.swing.JLabel tanggal;
-    private javax.swing.JButton ubah;
-    // End of variables declaration//GEN-END:variables
 }

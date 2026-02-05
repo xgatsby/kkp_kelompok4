@@ -1,656 +1,742 @@
 package master;
 
+import javax.swing.*;
+import javax.swing.border.*;
+import javax.swing.table.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import javax.swing.JOptionPane;
-import javax.swing.table.DefaultTableModel;
+import com.toedter.calendar.JDateChooser;
+import ui.ModernTheme;
+import koneksi.koneksi;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.view.JasperViewer;
 
-public class aset extends javax.swing.JFrame {
-
+/**
+ * Form Data Aset - Modernized Version
+ * Sistem Inventaris Aset SMA Negeri 62 Jakarta
+ * 
+ * @author Sistem Inventaris Aset
+ * @version 2.0 (Modernized with ModernTheme - Phase 4)
+ */
+public class aset extends JFrame {
+    
+    // Components
+    private JTextField txtIDAset;
+    private JTextField txtNamaAset;
+    private JDateChooser dateTanggalMasuk;
+    private JComboBox<String> cmbKondisi;
+    private JTextField txtSearch;
+    private JButton btnSimpan;
+    private JButton btnUbah;
+    private JButton btnHapus;
+    private JButton btnBersihkan;
+    private JButton btnCari;
+    private JButton btnCetak;
+    private JTable tableAset;
+    private DefaultTableModel tableModel;
+    private JScrollPane scrollPane;
+    
+    // Database connection
+    private Connection conn;
+    
+    /**
+     * Constructor - Initialize form and apply modern theme
+     */
     public aset() {
+        ModernTheme.applyTheme();
         initComponents();
-        tampilkanTanggal();
+        setLocationRelativeTo(null);
         tampilData();
-        
-    }
-
-    private void tampilkanTanggal() {
-        javax.swing.Timer timer = new javax.swing.Timer(60000, (e) -> {
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-            String tgl = sdf.format(new java.util.Date());
-            tanggal.setText(tgl);
-        });
-        timer.start();
-        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("EEEE, dd MMMM yyyy");
-        String tgl = sdf.format(new java.util.Date());
-        tanggal.setText(tgl);
+        generateNextID();
     }
     
-    private void tampilData() {
-    DefaultTableModel model = new DefaultTableModel();
-    model.addColumn("ID Aset");
-    model.addColumn("Nama Aset");
-    model.addColumn("Tanggal Masuk");
-    model.addColumn("Kondisi");
-
-    try {
-        String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-        String user = "inventaris";
-        String pass = "inventaris123";
-        Connection conn = DriverManager.getConnection(url, user, pass);
-
-        String sql = "SELECT * FROM aset";
-        Statement st = conn.createStatement();
-        ResultSet rs = st.executeQuery(sql);
-
-        while (rs.next()) {
-            model.addRow(new Object[]{
-                rs.getString("id_aset"),
-                rs.getString("nama_aset"),
-                rs.getDate("tanggal_masuk"),
-                rs.getString("kondisi")
-            });
-        }
-
-        tabelaset.setModel(model);
-
-        conn.close();
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Gagal load data: " + e.getMessage());
-}}
-    @SuppressWarnings("unchecked")
-    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    /**
+     * Initialize all components with modern styling
+     */
     private void initComponents() {
-
-        jPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        tanggal = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        mutasi = new javax.swing.JButton();
-        jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        idaset = new javax.swing.JTextField();
-        namaaset = new javax.swing.JTextField();
-        kondisi = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabelaset = new javax.swing.JTable();
-        simpan = new javax.swing.JButton();
-        ubah = new javax.swing.JButton();
-        hapus = new javax.swing.JButton();
-        bersikan1 = new javax.swing.JButton();
-        cariteks = new javax.swing.JTextField();
-        cari = new javax.swing.JButton();
-        jLabel12 = new javax.swing.JLabel();
-        tanggalmasuk = new com.toedter.calendar.JDateChooser();
-        laporan = new javax.swing.JButton();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
-        jPanel1.setMaximumSize(new java.awt.Dimension(1315, 700));
-        jPanel1.setMinimumSize(new java.awt.Dimension(1315, 700));
-
-        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
-
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setText("Halo, Selamat Datang !");
-
-        tanggal.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        tanggal.setText("Tanggal Hari ini");
-
-        jLabel7.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel7.setText("Form Data Aset");
-        jLabel7.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-
-        jLabel8.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel8.setText("______________________________________");
-
-        mutasi.setBackground(new java.awt.Color(255, 255, 255));
-        mutasi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/BRANDA.png"))); // NOI18N
-        mutasi.setText("Branda");
-        mutasi.setBorderPainted(false);
-        mutasi.setContentAreaFilled(false);
-        mutasi.setFocusPainted(false);
-        mutasi.setMaximumSize(new java.awt.Dimension(96, 28));
-        mutasi.setMinimumSize(new java.awt.Dimension(96, 28));
-        mutasi.setOpaque(true);
-        mutasi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mutasiActionPerformed(evt);
-            }
-        });
-
-        jLabel9.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel9.setText("Nama Aset");
-
-        jLabel10.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel10.setText("Kondisi");
-
-        jLabel11.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel11.setText("ID Aset");
-
-        idaset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                idasetActionPerformed(evt);
-            }
-        });
-
-        namaaset.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                namaasetActionPerformed(evt);
-            }
-        });
-
-        kondisi.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                kondisiActionPerformed(evt);
-            }
-        });
-
-        tabelaset.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
+        // Frame setup
+        setTitle("Form Data Aset - Sistem Inventaris Aset");
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setSize(1200, 700);
+        setLayout(new BorderLayout());
+        getContentPane().setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Create main panel
+        JPanel mainPanel = new JPanel(new BorderLayout(0, ModernTheme.SPACING_M));
+        mainPanel.setBackground(ModernTheme.LATAR_UTAMA);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+            ModernTheme.SPACING_L, ModernTheme.SPACING_L, 
+            ModernTheme.SPACING_L, ModernTheme.SPACING_L
         ));
-        tabelaset.setGridColor(new java.awt.Color(204, 204, 204));
-        tabelaset.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tabelasetMouseClicked(evt);
+        
+        // Create title panel
+        JPanel titlePanel = createTitlePanel();
+        
+        // Create input card
+        JPanel inputCard = createInputCard();
+        
+        // Create button panel
+        JPanel buttonPanel = createButtonPanel();
+        
+        // Create table panel
+        JPanel tablePanel = createTablePanel();
+        
+        // Assemble layout
+        JPanel topPanel = new JPanel(new BorderLayout(0, ModernTheme.SPACING_M));
+        topPanel.setBackground(ModernTheme.LATAR_UTAMA);
+        topPanel.add(titlePanel, BorderLayout.NORTH);
+        topPanel.add(inputCard, BorderLayout.CENTER);
+        topPanel.add(buttonPanel, BorderLayout.SOUTH);
+        
+        mainPanel.add(topPanel, BorderLayout.NORTH);
+        mainPanel.add(tablePanel, BorderLayout.CENTER);
+        
+        add(mainPanel);
+    }
+    
+    /**
+     * Create title panel with form heading
+     */
+    private JPanel createTitlePanel() {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        JLabel lblTitle = ModernTheme.createStyledLabel("FORM DATA ASET", "h2");
+        panel.add(lblTitle, BorderLayout.WEST);
+        
+        return panel;
+    }
+    
+    /**
+     * Create input card with form fields
+     */
+    private JPanel createInputCard() {
+        JPanel card = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(card);
+        card.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(ModernTheme.SPACING_S, ModernTheme.SPACING_S, 
+                                ModernTheme.SPACING_S, ModernTheme.SPACING_S);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        
+        // Row 0: ID Aset
+        gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0;
+        JLabel lblID = ModernTheme.createStyledLabel("ID Aset", "label");
+        card.add(lblID, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        txtIDAset = ModernTheme.createStyledTextField();
+        txtIDAset.setEnabled(false);
+        txtIDAset.setToolTipText("ID Aset (Auto-generated)");
+        card.add(txtIDAset, gbc);
+        
+        // Row 1: Nama Aset
+        gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0;
+        JLabel lblNama = ModernTheme.createStyledLabel("Nama Aset *", "label");
+        card.add(lblNama, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        txtNamaAset = ModernTheme.createStyledTextField();
+        txtNamaAset.setToolTipText("Nama aset (minimal 3 karakter)");
+        card.add(txtNamaAset, gbc);
+        
+        // Row 2: Tanggal Masuk
+        gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0;
+        JLabel lblTanggal = ModernTheme.createStyledLabel("Tanggal Masuk *", "label");
+        card.add(lblTanggal, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        dateTanggalMasuk = new JDateChooser();
+        dateTanggalMasuk.setDateFormatString("yyyy-MM-dd");
+        dateTanggalMasuk.setPreferredSize(new Dimension(0, 40));
+        dateTanggalMasuk.setFont(ModernTheme.FONT_BODY);
+        dateTanggalMasuk.setToolTipText("Pilih tanggal masuk aset");
+        card.add(dateTanggalMasuk, gbc);
+        
+        // Row 3: Kondisi
+        gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0;
+        JLabel lblKondisi = ModernTheme.createStyledLabel("Kondisi *", "label");
+        card.add(lblKondisi, gbc);
+        
+        gbc.gridx = 1; gbc.weightx = 1;
+        String[] kondisiOptions = {"Baik", "Rusak Ringan", "Rusak Berat"};
+        cmbKondisi = new JComboBox<>(kondisiOptions);
+        cmbKondisi.setFont(ModernTheme.FONT_BODY);
+        cmbKondisi.setPreferredSize(new Dimension(0, 40));
+        cmbKondisi.setBackground(Color.WHITE);
+        cmbKondisi.setToolTipText("Pilih kondisi aset");
+        card.add(cmbKondisi, gbc);
+        
+        return card;
+    }
+    
+    /**
+     * Create button panel with action buttons
+     */
+    private JPanel createButtonPanel() {
+        JPanel panel = new JPanel(new BorderLayout(ModernTheme.SPACING_M, 0));
+        panel.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Left side: CRUD buttons
+        JPanel leftButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, ModernTheme.SPACING_S, 0));
+        leftButtons.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        // Back button
+        JButton btnKembali = ModernTheme.createStyledButton("← KEMBALI", "secondary");
+        btnKembali.addActionListener(e -> this.dispose());
+        btnKembali.setToolTipText("Kembali ke Dashboard");
+        
+        btnSimpan = ModernTheme.createStyledButton("💾 SIMPAN", "success");
+        btnUbah = ModernTheme.createStyledButton("✏️ UBAH", "primary");
+        btnHapus = ModernTheme.createStyledButton("🗑️ HAPUS", "danger");
+        btnBersihkan = ModernTheme.createStyledButton("🧹 BERSIHKAN", "secondary");
+        
+        btnSimpan.addActionListener(e -> simpanActionPerformed());
+        btnUbah.addActionListener(e -> ubahActionPerformed());
+        btnHapus.addActionListener(e -> hapusActionPerformed());
+        btnBersihkan.addActionListener(e -> bersihkanActionPerformed());
+        
+        leftButtons.add(btnKembali);
+        leftButtons.add(btnSimpan);
+        leftButtons.add(btnUbah);
+        leftButtons.add(btnHapus);
+        leftButtons.add(btnBersihkan);
+        
+        // Right side: Search and Print
+        JPanel rightButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, ModernTheme.SPACING_S, 0));
+        rightButtons.setBackground(ModernTheme.LATAR_UTAMA);
+        
+        txtSearch = ModernTheme.createStyledTextField();
+        txtSearch.setPreferredSize(new Dimension(250, 36));
+        txtSearch.setToolTipText("Ketik kata kunci dan tekan Enter untuk mencari");
+        txtSearch.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                    cariActionPerformed();
+                }
             }
         });
-        jScrollPane1.setViewportView(tabelaset);
-
-        simpan.setBackground(new java.awt.Color(204, 204, 204));
-        simpan.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        simpan.setText("SIMPAN");
-        simpan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                simpanActionPerformed(evt);
+        
+        btnCari = ModernTheme.createStyledButton("🔍 CARI", "primary");
+        btnCari.addActionListener(e -> cariActionPerformed());
+        
+        btnCetak = ModernTheme.createStyledButton("🖨️ CETAK LAPORAN", "primary");
+        btnCetak.addActionListener(e -> cetakActionPerformed());
+        
+        rightButtons.add(txtSearch);
+        rightButtons.add(btnCari);
+        rightButtons.add(btnCetak);
+        
+        panel.add(leftButtons, BorderLayout.WEST);
+        panel.add(rightButtons, BorderLayout.EAST);
+        
+        return panel;
+    }
+    
+    /**
+     * Create table panel with data display
+     */
+    private JPanel createTablePanel() {
+        JPanel panel = ModernTheme.createStyledPanel();
+        ModernTheme.applyCardStyle(panel);
+        panel.setLayout(new BorderLayout());
+        
+        // Create table model
+        String[] columns = {"ID Aset", "Nama Aset", "Tanggal Masuk", "Kondisi"};
+        tableModel = new DefaultTableModel(columns, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
+        // Create table
+        tableAset = ModernTheme.createStyledTable(tableModel);
+        tableAset.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 1) {
+                    int row = tableAset.getSelectedRow();
+                    if (row != -1) {
+                        txtIDAset.setText(tableAset.getValueAt(row, 0).toString());
+                        txtNamaAset.setText(tableAset.getValueAt(row, 1).toString());
+                        
+                        // Parse tanggal
+                        try {
+                            String tanggalStr = tableAset.getValueAt(row, 2).toString();
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            Date tanggal = sdf.parse(tanggalStr);
+                            dateTanggalMasuk.setDate(tanggal);
+                        } catch (Exception ex) {
+                            dateTanggalMasuk.setDate(null);
+                        }
+                        
+                        cmbKondisi.setSelectedItem(tableAset.getValueAt(row, 3).toString());
+                    }
+                }
             }
         });
-
-        ubah.setBackground(new java.awt.Color(204, 204, 204));
-        ubah.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        ubah.setText("UBAH");
-        ubah.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                ubahActionPerformed(evt);
-            }
-        });
-
-        hapus.setBackground(new java.awt.Color(204, 204, 204));
-        hapus.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        hapus.setText("HAPUS");
-        hapus.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                hapusActionPerformed(evt);
-            }
-        });
-
-        bersikan1.setBackground(new java.awt.Color(204, 204, 204));
-        bersikan1.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        bersikan1.setText("BERSIKAN");
-        bersikan1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                bersikan1ActionPerformed(evt);
-            }
-        });
-
-        cari.setBackground(new java.awt.Color(255, 255, 255));
-        cari.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/CARI.png"))); // NOI18N
-        cari.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cariActionPerformed(evt);
-            }
-        });
-
-        jLabel12.setFont(new java.awt.Font("Times New Roman", 0, 18)); // NOI18N
-        jLabel12.setText("Tanggal");
-
-        laporan.setBackground(new java.awt.Color(255, 255, 255));
-        laporan.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icon/LAPORAN.png"))); // NOI18N
-        laporan.setBorderPainted(false);
-        laporan.setContentAreaFilled(false);
-        laporan.setFocusPainted(false);
-        laporan.setOpaque(true);
-        laporan.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                laporanActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(cariteks, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cari)
-                        .addGap(64, 64, 64)
-                        .addComponent(mutasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(tanggal)))
-                .addContainerGap())
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(435, 435, 435)
-                .addComponent(jLabel7)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(230, 230, 230)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(laporan, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(jPanel3Layout.createSequentialGroup()
-                            .addComponent(simpan, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(ubah, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(59, 59, 59)
-                            .addComponent(hapus, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(75, 75, 75)
-                            .addComponent(bersikan1))
-                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel11)
-                                .addComponent(jLabel9))
-                            .addGap(47, 47, 47)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(namaaset, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 174, Short.MAX_VALUE)
-                                .addComponent(idaset))
-                            .addGap(65, 65, 65)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel12)
-                                .addComponent(jLabel10))
-                            .addGap(49, 49, 49)
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(tanggalmasuk, javax.swing.GroupLayout.DEFAULT_SIZE, 212, Short.MAX_VALUE)
-                                .addComponent(kondisi)))
-                        .addComponent(jScrollPane1)))
-                .addGap(0, 230, Short.MAX_VALUE))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(mutasi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(cariteks, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jLabel1)
-                    .addComponent(cari))
-                .addGap(10, 10, 10)
-                .addComponent(jLabel7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
-                .addGap(32, 32, 32)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel11)
-                        .addComponent(idaset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel12))
-                    .addComponent(tanggalmasuk, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(48, 48, 48)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(namaaset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel10)
-                    .addComponent(kondisi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(laporan)
-                .addGap(5, 5, 5)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(simpan)
-                    .addComponent(ubah)
-                    .addComponent(hapus)
-                    .addComponent(bersikan1))
-                .addGap(21, 21, 21)
-                .addComponent(tanggal)
-                .addContainerGap())
-        );
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 1184, Short.MAX_VALUE)
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 659, javax.swing.GroupLayout.PREFERRED_SIZE)
-        );
-
-        pack();
-    }// </editor-fold>//GEN-END:initComponents
-
-    private void cariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cariActionPerformed
-        String key = cariteks.getText().trim();
-
-        if (key.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Masukkan kata kunci pencarian!");
-            return;
-        }
-
+        
+        scrollPane = new JScrollPane(tableAset);
+        scrollPane.setBorder(BorderFactory.createLineBorder(ModernTheme.BORDER, 1));
+        
+        panel.add(scrollPane, BorderLayout.CENTER);
+        
+        return panel;
+    }
+    
+    // ==================== DATABASE METHODS ====================
+    
+    /**
+     * Generate next ID Aset automatically
+     */
+    private void generateNextID() {
         try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-
-            Connection conn = DriverManager.getConnection(url, user, pass);
-            String sql = "SELECT * FROM aset WHERE id_aset LIKE ? OR nama_aset LIKE ? OR tanggal_masuk LIKE ?OR kondisi LIKE ?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, "%" + key + "%");
-            pst.setString(2, "%" + key + "%");
-            pst.setString(3, "%" + key + "%");
-            pst.setString(4, "%" + key + "%");
-
-            ResultSet rs = pst.executeQuery();
-            DefaultTableModel model = (DefaultTableModel) tabelaset.getModel();
-            model.setRowCount(0);
-
+            conn = koneksi.getConnection();
+            String sql = "SELECT id_aset FROM aset ORDER BY id_aset DESC LIMIT 1";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
+            if (rs.next()) {
+                String lastID = rs.getString("id_aset");
+                String numPart = lastID.substring(3); // Remove "AST"
+                int nextNum = Integer.parseInt(numPart) + 1;
+                String nextID = String.format("AST%03d", nextNum);
+                txtIDAset.setText(nextID);
+            } else {
+                txtIDAset.setText("AST001");
+            }
+            
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            txtIDAset.setText("AST001");
+        }
+    }
+    
+    /**
+     * Display all aset data in table
+     */
+    private void tampilData() {
+        try {
+            conn = koneksi.getConnection();
+            tableModel.setRowCount(0);
+            
+            String sql = "SELECT * FROM aset ORDER BY id_aset";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+            
             while (rs.next()) {
                 Object[] row = {
                     rs.getString("id_aset"),
                     rs.getString("nama_aset"),
-                    rs.getString("tanggal_masuk"),
+                    rs.getDate("tanggal_masuk"),
                     rs.getString("kondisi")
                 };
-                model.addRow(row);
+                tableModel.addRow(row);
             }
-
-            conn.close();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Pencarian gagal: " + e.getMessage());
+            
+            rs.close();
+            st.close();
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal menampilkan data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_cariActionPerformed
-
-    private void hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_hapusActionPerformed
-        int baris = tabelaset.getSelectedRow();
-
-        if (baris == -1) {
-            JOptionPane.showMessageDialog(this, "Pilih data yang mau dihapus dulu.");
+    }
+    
+    /**
+     * Clear all input fields
+     */
+    private void kosongkanForm() {
+        txtNamaAset.setText("");
+        dateTanggalMasuk.setDate(null);
+        cmbKondisi.setSelectedIndex(0);
+        generateNextID();
+        txtNamaAset.requestFocus();
+    }
+    
+    /**
+     * Validate input data
+     */
+    private boolean validateInput() {
+        String id = txtIDAset.getText().trim();
+        String nama = txtNamaAset.getText().trim();
+        Date tanggal = dateTanggalMasuk.getDate();
+        
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "ID Aset tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            return false;
+        }
+        
+        if (nama.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Nama Aset tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtNamaAset.requestFocus();
+            return false;
+        }
+        
+        if (nama.length() < 3) {
+            JOptionPane.showMessageDialog(this,
+                "Nama Aset minimal 3 karakter!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            txtNamaAset.requestFocus();
+            return false;
+        }
+        
+        if (tanggal == null) {
+            JOptionPane.showMessageDialog(this,
+                "Tanggal Masuk tidak boleh kosong!",
+                "Validasi Error",
+                JOptionPane.WARNING_MESSAGE);
+            dateTanggalMasuk.requestFocus();
+            return false;
+        }
+        
+        return true;
+    }
+    
+    // ==================== EVENT HANDLERS ====================
+    
+    /**
+     * Save new aset data
+     */
+    private void simpanActionPerformed() {
+        if (!validateInput()) {
             return;
         }
-
-        String id = tabelaset.getValueAt(baris, 0).toString();
-
-        int konfirmasi = JOptionPane.showConfirmDialog(
-            this,
-            "Yakin mau hapus data dengan ID " + id + "?",
-            "Konfirmasi Hapus",
-            JOptionPane.YES_NO_OPTION
-        );
-
-        if (konfirmasi == JOptionPane.YES_OPTION) {
-            try {
-                String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-                String user = "inventaris";
-                String pass = "inventaris123";
-
-                Connection conn = DriverManager.getConnection(url, user, pass);
-
-                String sql = "DELETE FROM aset WHERE id_aset = ?";
-                PreparedStatement pst = conn.prepareStatement(sql);
-                pst.setString(1, id);
-
-                int affected = pst.executeUpdate();
-                if (affected > 0) {
-                    JOptionPane.showMessageDialog(this, "Data berhasil dihapus!");
-                } else {
-                    JOptionPane.showMessageDialog(this, "Data tidak ditemukan / gagal dihapus!");
-                }
-
-                tampilData();
-
-                conn.close();
-
-            } catch (SQLException e) {
-                JOptionPane.showMessageDialog(this, "Data gagal dihapus: " + e.getMessage());
+        
+        String id = txtIDAset.getText().trim();
+        String nama = txtNamaAset.getText().trim();
+        Date tanggal = dateTanggalMasuk.getDate();
+        String kondisi = cmbKondisi.getSelectedItem().toString();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String tanggalStr = sdf.format(tanggal);
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Simpan data aset berikut?\n\n" +
+            "ID Aset: " + id + "\n" +
+            "Nama: " + nama + "\n" +
+            "Tanggal Masuk: " + tanggalStr + "\n" +
+            "Kondisi: " + kondisi,
+            "Konfirmasi Simpan",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            
+            // Check if ID already exists
+            String checkSql = "SELECT id_aset FROM aset WHERE id_aset = ?";
+            PreparedStatement checkPs = conn.prepareStatement(checkSql);
+            checkPs.setString(1, id);
+            ResultSet rs = checkPs.executeQuery();
+            
+            if (rs.next()) {
+                JOptionPane.showMessageDialog(this,
+                    "ID Aset sudah ada! Gunakan ID yang berbeda.",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                rs.close();
+                checkPs.close();
+                return;
             }
-        }
-    }//GEN-LAST:event_hapusActionPerformed
-
-    private void ubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ubahActionPerformed
-        String ID = idaset.getText();
-        String Nama = namaaset.getText();
-        Date TGL = tanggalmasuk.getDate();
-        String Kondisi = kondisi.getText();
-
-        if (ID.isEmpty() || Nama.isEmpty() || TGL == null || Kondisi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi.");
-            return;
-        }
-
-        try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-            Connection conn = DriverManager.getConnection(url, user, pass);
-
-            String sql = "UPDATE aset SET nama_aset=?, tanggal_masuk=?, kondisi=? WHERE id_aset=?";
-            PreparedStatement pst = conn.prepareStatement(sql);
-            pst.setString(1, Nama);
-            java.sql.Date sqlDate = new java.sql.Date(TGL.getTime());
-            pst.setDate(2, sqlDate);
-            pst.setString(3, Kondisi);
-            pst.setString(4, ID);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Data berhasil diubah!");
-
-            conn.close();
-            tampilData();
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Gagal mengubah data: " + e.getMessage());
-        }
-    }//GEN-LAST:event_ubahActionPerformed
-
-    private void simpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_simpanActionPerformed
-        String ID = idaset.getText();
-        String Nama = namaaset.getText();
-        Date TGL = tanggalmasuk.getDate();
-        String Kondisi = kondisi.getText();
-
-        if (ID.isEmpty() || Nama.isEmpty() || TGL == null || Kondisi.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Semua field harus diisi.");
-            return;
-        }
-
-        try {
-            String url = "jdbc:mysql://localhost:3306/inventaris_aset";
-            String user = "inventaris";
-            String pass = "inventaris123";
-
-            Connection conn = DriverManager.getConnection(url, user, pass);
-
+            rs.close();
+            checkPs.close();
+            
+            // Insert new data
             String sql = "INSERT INTO aset (id_aset, nama_aset, tanggal_masuk, kondisi) VALUES (?, ?, ?, ?)";
-            PreparedStatement pst = conn.prepareStatement(sql);
-
-            pst.setString(1, ID);
-            pst.setString(2, Nama);
-            java.sql.Date sqlDate = new java.sql.Date(TGL.getTime());
-            pst.setDate(3, sqlDate);
-            pst.setString(4, Kondisi);
-
-            pst.executeUpdate();
-
-            JOptionPane.showMessageDialog(this, "Data berhasil disimpan!");
-
-            idaset.setText("");
-            namaaset.setText("");
-            tanggalmasuk.setDate(null);
-            kondisi.setText("");
-
-            conn.close();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            ps.setString(2, nama);
+            ps.setString(3, tanggalStr);
+            ps.setString(4, kondisi);
+            
+            ps.executeUpdate();
+            ps.close();
+            
+            JOptionPane.showMessageDialog(this,
+                "✓ Data aset berhasil disimpan!",
+                "Sukses",
+                JOptionPane.INFORMATION_MESSAGE);
+            
+            kosongkanForm();
             tampilData();
-
-        } catch (SQLException e) {
-            JOptionPane.showMessageDialog(this, "Data gagal disimpan : " + e.getMessage());
-        }
-    }//GEN-LAST:event_simpanActionPerformed
-
-    private void tabelasetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tabelasetMouseClicked
-        int baris = tabelaset.rowAtPoint(evt.getPoint());
-
-        String ID = tabelaset.getValueAt(baris, 0).toString();
-        String Nama = tabelaset.getValueAt(baris, 1).toString();
-        String tgl = tabelaset.getValueAt(baris, 2).toString();
-        String Kontak = tabelaset.getValueAt(baris, 3).toString();
-
-        idaset.setText(ID);
-        namaaset.setText(Nama);
-        kondisi.setText(Kontak);
-
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sdf.parse(tgl);
-            tanggalmasuk.setDate(date);
+            
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(this,
+                "Gagal menyimpan data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_tabelasetMouseClicked
-
-    private void kondisiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_kondisiActionPerformed
-
-    }//GEN-LAST:event_kondisiActionPerformed
-
-    private void namaasetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_namaasetActionPerformed
-
-    }//GEN-LAST:event_namaasetActionPerformed
-
-    private void idasetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idasetActionPerformed
-
-    }//GEN-LAST:event_idasetActionPerformed
-
-    private void mutasiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mutasiActionPerformed
-        new branda().setVisible(true);
-        this.dispose();
-    }//GEN-LAST:event_mutasiActionPerformed
-
-    private void bersikan1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bersikan1ActionPerformed
-        cariteks.setText("");
-        idaset.setText("");
-        namaaset.setText("");
-        tanggalmasuk.setDate(null);
-        kondisi.setText("");
-    }//GEN-LAST:event_bersikan1ActionPerformed
-
-    private void laporanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_laporanActionPerformed
-        Connection conn = null;
+    }
+    
+    /**
+     * Update existing aset data
+     */
+    private void ubahActionPerformed() {
+        if (!validateInput()) {
+            return;
+        }
+        
+        String id = txtIDAset.getText().trim();
+        String nama = txtNamaAset.getText().trim();
+        Date tanggal = dateTanggalMasuk.getDate();
+        String kondisi = cmbKondisi.getSelectedItem().toString();
+        
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String tanggalStr = sdf.format(tanggal);
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Ubah data aset berikut?\n\n" +
+            "ID Aset: " + id + "\n" +
+            "Nama: " + nama + "\n" +
+            "Tanggal Masuk: " + tanggalStr + "\n" +
+            "Kondisi: " + kondisi,
+            "Konfirmasi Ubah",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
         try {
-            conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/inventaris_aset",
-                "inventaris", "inventaris123"
-            );
+            conn = koneksi.getConnection();
+            String sql = "UPDATE aset SET nama_aset = ?, tanggal_masuk = ?, kondisi = ? WHERE id_aset = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, nama);
+            ps.setString(2, tanggalStr);
+            ps.setString(3, kondisi);
+            ps.setString(4, id);
             
-            // Try to load .jasper file first
-            InputStream report = getClass().getResourceAsStream("/laporan/LaporanDataAset.jasper");
+            int result = ps.executeUpdate();
+            ps.close();
             
-            // If .jasper doesn't exist, compile from .jrxml
-            if (report == null) {
-                InputStream jrxmlStream = getClass().getResourceAsStream("/laporan/LaporanDataAset.jrxml");
-                if (jrxmlStream == null) {
-                    JOptionPane.showMessageDialog(null, "File laporan (.jrxml) tidak ditemukan");
-                    return;
-                }
-                // Compile .jrxml to .jasper in memory
-                net.sf.jasperreports.engine.JasperReport jasperReport = 
-                    net.sf.jasperreports.engine.JasperCompileManager.compileReport(jrxmlStream);
-                JasperPrint print = JasperFillManager.fillReport(jasperReport, new HashMap<>(), conn);
-                JasperViewer viewer = new JasperViewer(print, false);
-                viewer.setTitle("Laporan Data Aset");
-                viewer.setVisible(true);
+            if (result > 0) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ Data aset berhasil diubah!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                kosongkanForm();
+                tampilData();
             } else {
-                // Use pre-compiled .jasper file
-                JasperPrint print = JasperFillManager.fillReport(report, new HashMap<>(), conn);
-                JasperViewer viewer = new JasperViewer(print, false);
-                viewer.setTitle("Laporan Data Aset");
-                viewer.setVisible(true);
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             }
+            
         } catch (Exception e) {
-            e.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Gagal mencetak laporan: " + e.getMessage());
+            JOptionPane.showMessageDialog(this,
+                "Gagal mengubah data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
         }
-    }//GEN-LAST:event_laporanActionPerformed
-    public static void main(String args[]) {
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new aset().setVisible(true);
+    }
+    
+    /**
+     * Delete aset data
+     */
+    private void hapusActionPerformed() {
+        String id = txtIDAset.getText().trim();
+        
+        if (id.isEmpty()) {
+            JOptionPane.showMessageDialog(this,
+                "Pilih data yang akan dihapus!",
+                "Peringatan",
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Confirmation dialog
+        int confirm = JOptionPane.showConfirmDialog(this,
+            "Hapus data aset berikut?\n\n" +
+            "ID Aset: " + id + "\n" +
+            "Nama: " + txtNamaAset.getText() + "\n\n" +
+            "Data yang dihapus tidak dapat dikembalikan!",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE);
+        
+        if (confirm != JOptionPane.YES_OPTION) {
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            String sql = "DELETE FROM aset WHERE id_aset = ?";
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, id);
+            
+            int result = ps.executeUpdate();
+            ps.close();
+            
+            if (result > 0) {
+                JOptionPane.showMessageDialog(this,
+                    "✓ Data aset berhasil dihapus!",
+                    "Sukses",
+                    JOptionPane.INFORMATION_MESSAGE);
+                
+                kosongkanForm();
+                tampilData();
+            } else {
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal menghapus data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Clear all fields
+     */
+    private void bersihkanActionPerformed() {
+        // Check if there's data in fields
+        boolean hasData = !txtNamaAset.getText().trim().isEmpty() || 
+                         dateTanggalMasuk.getDate() != null;
+        
+        if (hasData) {
+            int confirm = JOptionPane.showConfirmDialog(this,
+                "Bersihkan semua field?",
+                "Konfirmasi",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+            
+            if (confirm != JOptionPane.YES_OPTION) {
+                return;
+            }
+        }
+        
+        kosongkanForm();
+        tampilData();
+    }
+    
+    /**
+     * Search aset data
+     */
+    private void cariActionPerformed() {
+        String keyword = txtSearch.getText().trim();
+        
+        if (keyword.isEmpty()) {
+            tampilData();
+            return;
+        }
+        
+        try {
+            conn = koneksi.getConnection();
+            tableModel.setRowCount(0);
+            
+            String sql = "SELECT * FROM aset WHERE " +
+                        "id_aset LIKE ? OR " +
+                        "nama_aset LIKE ? OR " +
+                        "kondisi LIKE ? " +
+                        "ORDER BY id_aset";
+            
+            PreparedStatement ps = conn.prepareStatement(sql);
+            String searchPattern = "%" + keyword + "%";
+            ps.setString(1, searchPattern);
+            ps.setString(2, searchPattern);
+            ps.setString(3, searchPattern);
+            
+            ResultSet rs = ps.executeQuery();
+            
+            int count = 0;
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getString("id_aset"),
+                    rs.getString("nama_aset"),
+                    rs.getDate("tanggal_masuk"),
+                    rs.getString("kondisi")
+                };
+                tableModel.addRow(row);
+                count++;
+            }
+            
+            rs.close();
+            ps.close();
+            
+            if (count == 0) {
+                JOptionPane.showMessageDialog(this,
+                    "Data tidak ditemukan untuk: " + keyword,
+                    "Hasil Pencarian",
+                    JOptionPane.INFORMATION_MESSAGE);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal mencari data: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        }
+    }
+    
+    /**
+     * Print aset report
+     */
+    private void cetakActionPerformed() {
+        try {
+            conn = koneksi.getConnection();
+            
+            InputStream reportStream = getClass().getResourceAsStream("/laporan/LaporanDataAset.jasper");
+            
+            if (reportStream == null) {
+                JOptionPane.showMessageDialog(this,
+                    "File laporan tidak ditemukan!",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+            HashMap<String, Object> parameters = new HashMap<>();
+            JasperPrint print = JasperFillManager.fillReport(reportStream, parameters, conn);
+            JasperViewer viewer = new JasperViewer(print, false);
+            viewer.setVisible(true);
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this,
+                "Gagal mencetak laporan: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
+    
+    /**
+     * Main method for testing
+     */
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            new aset().setVisible(true);
         });
     }
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton bersikan1;
-    private javax.swing.JButton cari;
-    private javax.swing.JTextField cariteks;
-    private javax.swing.JButton hapus;
-    private javax.swing.JTextField idaset;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel12;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField kondisi;
-    private javax.swing.JButton laporan;
-    private javax.swing.JButton mutasi;
-    private javax.swing.JTextField namaaset;
-    private javax.swing.JButton simpan;
-    private javax.swing.JTable tabelaset;
-    private javax.swing.JLabel tanggal;
-    private com.toedter.calendar.JDateChooser tanggalmasuk;
-    private javax.swing.JButton ubah;
-    // End of variables declaration//GEN-END:variables
 }
